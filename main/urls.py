@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from main import views, user_views, org_views
+from main import views, user_views, org_views, nhs_views
 
 urlpatterns = patterns('',
     # user management
@@ -22,6 +22,9 @@ urlpatterns = patterns('',
     url(r'^manage/event/(?P<pk>\d+)/edit/$', org_views.event_edit, name='event_edit'),
     url(r'^manage/event/new/$', org_views.event_new, name='event_create'),
     url(r'^manage/event/(?P<pk>\d+)/delete/$', org_views.event_delete, name='event_delete'),
+
+    #NHS management
+    url(r'^nhs/$', nhs_views.nhs_home, name='nhs_home'),
 
     url(r'^list/(?P<page>\d+)/', views.list_events, name='list_page'),
     url(r'^list/$', views.list_events_one, name='list_events'),

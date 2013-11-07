@@ -1,0 +1,12 @@
+{%extends 'main/base.html'%}
+
+{%block title%}NHS Admin Area{%endblock%}
+
+{% block content %}
+	Welcome to the NHS Administration area! <br>
+	What would you like to do? <br>
+	<ul>
+		<li><a {#href="{%url 'main:nhs_list'%}"#}>List Students</a></li>
+		<li><a {#href="{%url 'main:nhs_settings'%}"#}>Change configuration</a></li>
+	</ul>
+{% endblock content %}

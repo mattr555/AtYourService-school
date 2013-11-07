@@ -15,7 +15,7 @@ class MyUserCreate(UserCreationForm):
     timezone = forms.ChoiceField(required=True, choices=[(i, i) for i in pytz.common_timezones])
 
     class Meta:
-        fields = ('first_name', 'last_name', 'email', 'volunteer', 'org_admin', 'timezone',)
+        fields = ('first_name', 'last_name', 'email', 'timezone',)
         model = User
 
     def save(self, commit=True):
@@ -23,21 +23,12 @@ class MyUserCreate(UserCreationForm):
                                         self.cleaned_data['password1'])
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
-        if self.cleaned_data.get('volunteer'):
-            user.groups.add(Group.objects.get(name="Volunteer"))
-        if self.cleaned_data.get('org_admin'):
-            user.groups.add(Group.objects.get(name="Org_Admin"))
+        user.groups.add(Group.objects.get(name="Volunteer"))
         user.save()
         profile = UserProfile(user=user)
         profile.timezone = self.cleaned_data['timezone']
         profile.save()
         return user
-
-    def clean_org_admin(self):
-        vol = self.cleaned_data.get('volunteer')
-        org = self.cleaned_data.get('org_admin')
-        if (not vol) and (not org):
-            raise forms.ValidationError('A checkbox is required')
 
 class UserEventCreate(forms.ModelForm):
     date_start = forms.DateTimeField(required=True, widget=forms.DateTimeInput(format='%m/%d/%Y %I:%M %p'))

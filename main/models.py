@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
+from django.contrib.sites.models import Site
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 
@@ -220,3 +221,8 @@ class UserProfile(models.Model):
     timezone = models.CharField(max_length=100, blank=True)
     email_valid = models.BooleanField(default=False)
     email_validation_key = models.CharField(max_length=50, blank=True)
+
+class SiteSettings(models.Model):
+    site = models.OneToOneField(Site, related_name='settings')
+    service_hours = models.IntegerField()
+    leadership_hours = models.IntegerField()
