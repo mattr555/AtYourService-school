@@ -2,8 +2,10 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 from main.models import Group, SiteSettings
+from main.forms import NHSSettingsModify
 
 @login_required
 def nhs_home(request):
@@ -21,3 +23,16 @@ def nhs_list(request):
 		'srv_min': settings.service_hours, 
 		'led_min': settings.leadership_hours})
 
+@permission_required('auth.can_view', login_url='/forbidden')
+def nhs_settings(request):
+	settings = SiteSettings.objects.get(pk=1)
+	if request.method == "POST":
+		form = NHSSettingsModify(request.POST)
+		if form.is_valid():
+			settings = form.save()
+			messages.success(request, 'Settings saved')
+			return HttpResponseRedirect(reverse('main:nhs_home'))
+	else:
+		form = NHSSettingsModify(settings.__dict__)
+		return render(request, 'main/nhs_settings.html', {'form': form})
+	

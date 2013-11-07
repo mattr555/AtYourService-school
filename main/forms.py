@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 from datetime import timedelta
-from main.models import UserEvent, UserProfile, Organization, Event
+from main.models import UserEvent, UserProfile, Organization, Event, SiteSettings
 
 import pytz
 
@@ -108,3 +108,16 @@ class OrganizationCreate(forms.ModelForm):
         if commit:
             o.save()
         return o
+
+class NHSSettingsModify(forms.ModelForm):
+    class Meta:
+        model = SiteSettings
+        fields = ('service_hours', 'leadership_hours')
+
+    def save(self, commit=True):
+        settings = SiteSettings.objects.get(pk=1)
+        settings.service_hours = self.cleaned_data['service_hours']
+        settings.leadership_hours = self.cleaned_data['leadership_hours']
+        if commit:
+            settings.save()
+        return settings
