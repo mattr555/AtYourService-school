@@ -210,7 +210,7 @@ class UserProfile(models.Model):
 
     def is_org_admin(self):
         return self.user.has_perm('main.add_organization')
-
+        
     def is_volunteer(self):
         return self.user.has_perm('main.add_userevent')
 
