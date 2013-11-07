@@ -2,6 +2,8 @@ AtYourService
 =============
 
 A django-based app to track your service hours on the web
+This is the version of AtYourService to run on a school domain
+For the future standalone website, go [here](https://www.github.com/AtYourService)
 
 [Vision doc here](TODO.txt)
 
@@ -31,9 +33,9 @@ Changelog
 
 v0.1.0
 ------
-Initial release. Since going on GitHub:
+Initial release. Corresponds with AtYourService v0.1.0
 
-* +User account manipulation
+* +User account manipula tion
 * +Email notification
 * +Organization manipulation and administration
 * +Confirmation of user attendance

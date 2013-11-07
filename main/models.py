@@ -11,6 +11,11 @@ import datetime
 
 ConfirmTuple = namedtuple('ConfirmTuple', 'status row_class button_class button_text')
 
+HOUR_TYPES = (
+    ('SRV', 'Service'),
+    ('LED', 'Leadership')
+)
+
 def haversin(p1_lat, p1_long, p2_lat, p2_long):
         # calculates the distance between p1 and p2
         multiplier = 3959  # for miles
@@ -150,6 +155,7 @@ class Event(models.Model):
     location = models.CharField(max_length=100)
     geo_lat = models.FloatField(blank=True, null=True)
     geo_lon = models.FloatField(blank=True, null=True)
+    hour_type = models.CharField(max_length=3, choices=HOUR_TYPES)
 
 class UserEvent(models.Model):
     def __str__(self):
@@ -194,6 +200,7 @@ class UserEvent(models.Model):
     geo_lat = models.FloatField(blank=True, null=True)
     geo_lon = models.FloatField(blank=True, null=True)
     hours_worked = models.FloatField('hours worked')
+    hour_type = models.CharField(max_length=3, choices=HOUR_TYPES)
 
 class UserProfile(models.Model):
     def __str__(self):
@@ -214,6 +221,21 @@ class UserProfile(models.Model):
     def is_volunteer(self):
         return self.user.has_perm('main.add_userevent')
 
+    def hours_filtered(self, filter):
+        #slow af function
+        count = 0
+        for i in self.user.events.filter(hour_type=filter):
+            count += i.hours()
+        for i in self.user.user_events.filter(hour_type=filter):
+            count += i.hours_worked
+        return count
+
+    def service_hours(self):
+        return self.hours_filtered('SRV')
+
+    def leadership_hours(self):
+        return self.hours_filtered('LED')
+
     user = models.OneToOneField(User, unique=True, related_name='user_profile')
     geo_lat = models.FloatField(blank=True, null=True)
     geo_lon = models.FloatField(blank=True, null=True)
@@ -221,6 +243,7 @@ class UserProfile(models.Model):
     timezone = models.CharField(max_length=100, blank=True)
     email_valid = models.BooleanField(default=False)
     email_validation_key = models.CharField(max_length=50, blank=True)
+    grad_class = models.IntegerField()
 
 class SiteSettings(models.Model):
     site = models.OneToOneField(Site, related_name='settings')

@@ -3,5 +3,38 @@
 {% block title %}List Students{% endblock title %}
 
 {% block content %}
-	Hai, a big-ass table is gonna go here.
+	<h2>List Students</h2>
+	{% if students %}
+	<table class="table table-hover sortable">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Leadership Hours</th>
+				<th>Service Hours</th>
+				<th>Class</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for s in students %}
+				<tr class='student-row'>
+					<td>{{s.get_full_name}}</td>
+					<td class='led-hr'>{{s.user_profile.leadership_hours}}</td>
+					<td class='srv-hr'>{{s.user_profile.service_hours}}</td>
+					<td>{{s.user_profile.grad_class}}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
 {% endblock content %}
+
+{% block scripts %}
+	<script src='//cdn.jsdelivr.net/sorttable/2/sorttable.min.js'></script>
+	<script>
+	$(document).ready(function(){
+		$('.student-row').filter(function(){
+			return parseFloat($(this).children('.led-hr').text()) >= {{led_min}} && parseFloat($(this).children('.srv-hr').text()) >= {{srv_min}}
+		}).addClass('success')
+	})
+	</script>
+{% endblock scripts %}

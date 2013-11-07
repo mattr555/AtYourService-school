@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 
-from main.models import Group
+from main.models import Group, SiteSettings
 
 @login_required
 def nhs_home(request):
@@ -16,5 +16,8 @@ def nhs_home(request):
 @permission_required('auth.can_view', login_url='/forbidden')
 def nhs_list(request):
 	students = Group.objects.get(name='Volunteer').user_set.all()
-	return render(request, 'main/nhs_list.html', {'students': students})
+	settings = SiteSettings.objects.get(pk=1)
+	return render(request, 'main/nhs_list.html', {'students': students, 
+		'srv_min': settings.service_hours, 
+		'led_min': settings.leadership_hours})
 

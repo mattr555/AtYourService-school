@@ -13,9 +13,10 @@ class MyUserCreate(UserCreationForm):
     volunteer = forms.BooleanField(required=False)
     org_admin = forms.BooleanField(required=False)
     timezone = forms.ChoiceField(required=True, choices=[(i, i) for i in pytz.common_timezones])
+    grad_class = forms.ChoiceField(required=True, choices=[(i, i) for i in range(2014, 2018)])
 
     class Meta:
-        fields = ('first_name', 'last_name', 'email', 'timezone',)
+        fields = ('first_name', 'last_name', 'email', 'timezone', 'grad_class')
         model = User
 
     def save(self, commit=True):
@@ -27,6 +28,7 @@ class MyUserCreate(UserCreationForm):
         user.save()
         profile = UserProfile(user=user)
         profile.timezone = self.cleaned_data['timezone']
+        profile.grad_class = int(self.cleaned_data['grad_class'])
         profile.save()
         return user
 
