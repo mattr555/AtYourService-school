@@ -38,7 +38,7 @@ class UserEventCreate(forms.ModelForm):
 
     class Meta:
         model = UserEvent
-        fields = ('name', 'description', 'date_start', 'date_end', 'location', 'hours_worked')
+        fields = ('name', 'description', 'date_start', 'date_end', 'location', 'hours_worked', 'hour_type')
 
     def __init__(self, user=None, *args, **kwargs):
         super(UserEventCreate, self).__init__(*args, **kwargs)
@@ -66,7 +66,7 @@ class EventCreate(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ('organization', 'name', 'description', 'location', 'date_start', 'date_end', 'geo_lat', 'geo_lon',)
+        fields = ('organization', 'name', 'description', 'location', 'date_start', 'date_end', 'geo_lat', 'geo_lon', 'hour_type')
 
     def __init__(self, user=None, *args, **kwargs):
         super(EventCreate, self).__init__(*args, **kwargs)
