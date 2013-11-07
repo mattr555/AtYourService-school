@@ -134,3 +134,8 @@ def track_events(request):
     return render(request, 'main/track_events.html', {'events': event_set,
                                                       'total_hours': total_hours,
                                                       'form': form})
+
+def forbidden(request):
+    """easy way to say that the user is not authorized"""
+    messages.error(request, 'You aren\'t authorized to do that!')
+    return HttpResponseRedirect('/')

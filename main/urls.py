@@ -25,6 +25,9 @@ urlpatterns = patterns('',
 
     #NHS management
     url(r'^nhs/$', nhs_views.nhs_home, name='nhs_home'),
+    url(r'^nhs/list$', nhs_views.nhs_list, name='nhs_list'),
+
+    url(r'^forbidden/$', views.forbidden),
 
     url(r'^list/(?P<page>\d+)/', views.list_events, name='list_page'),
     url(r'^list/$', views.list_events_one, name='list_events'),
