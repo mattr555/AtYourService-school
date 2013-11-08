@@ -9,7 +9,7 @@
 		<h2>{{event.name}}</h2>
 		<h4><a href="{{event.organization.detail_url}}">{{event.organization}}</a></h4>
 		{{event.date_start}} to {{event.date_end}}<br/>
-		<b>Hours: </b>{{event.hours}}<br/>
+		<b>Hours: </b>{{event.hours}} {{event.hour_type}}<br/>
 		<b>Organized by: </b>{{event.organizer.get_full_name}}<br/>
 		<b>Description: </b>{{event.description}}<br/>
 		<b>User Status: </b><span class='{% if event|args:request.user|call:"status" == "User-created Event" or event|args:request.user|call:"status" == "Confirmed"%}text-success{%elif event|args:request.user|call:"status" == "Unconfirmed"%}text-warning{%endif%}' id='user-status'>{{event|args:request.user|call:"status"}}</span>

@@ -1,6 +1,6 @@
 {%extends 'main/base.html'%}
 
-{%block title%}Event details for {{event.name}}{%endblock%}
+{%block title%}Event details for {{userevent.name}}{%endblock%}
 
 {%block content%}
 <div class='row-fluid'>
@@ -9,7 +9,7 @@
 		<h4>{{userevent.organization}}</h4>
 		{{userevent.date_start}} to {{userevent.date_end}}<br/>
 		User created event by {{userevent.user.get_full_name}}<br/>
-		<b>Hours: </b>{{userevent.hours}}<br/>
+		<b>Hours: </b>{{userevent.hours}} {{userevent.hour_type}}<br/>
 		<b>Description: </b>{{userevent.description}}
 		<hr/>
 		<b>Location: </b>{{userevent.location}}<br/>
