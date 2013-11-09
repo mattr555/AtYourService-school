@@ -2,7 +2,9 @@ AtYourService
 =============
 
 A django-based app to track your service hours on the web
+
 This is the version of AtYourService to run on a school domain
+
 For the future standalone website, go [here](https://www.github.com/AtYourService)
 
 [Vision doc here](TODO.txt)
