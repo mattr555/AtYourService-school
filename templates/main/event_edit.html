@@ -34,6 +34,14 @@
 			<input type="text" class="form-control" id="date-end-field" name="date_end" value="{{event.date_end.value|date_value}}" placeholder="MM/DD/YY HH:MM AM/PM">
 		</div>
 		<div class="form-group">
+			<label for="hour-type-field">Hour Type</label>
+			<select name="hour_type" id="hour-type-field" class="form-control">
+				<option value="">-</option>
+				<option value="SRV" {% if event.hour_type.value == "SRV"%}selected{%endif%}>Service</option>
+				<option value="LED" {% if event.hour_type.value == "LED"%}selected{%endif%}>Leadership</option>
+			</select>
+		</div>
+		<div class="form-group">
 			<label for="location-field">Location</label>
 			<input type="text" class="form-control" id="location-field" name="location" value="{{event.location.value}}">
 		</div>

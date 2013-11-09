@@ -45,8 +45,8 @@
 			<label for="hour-type-field">Hour Type</label>
 			<select name="hour_type" id="hour-type-field" class="form-control">
 				<option value="">-</option>
-				<option value="SRV">Service</option>
-				<option value="LED">Leadership</option>
+				<option value="SRV" {% if event.hour_type.value == "SRV"%}selected{%endif%}>Service</option>
+				<option value="LED" {% if event.hour_type.value == "LED"%}selected{%endif%}>Leadership</option>
 			</select>
 		</div>
 		<div class="form-group">
