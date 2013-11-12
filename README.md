@@ -1,5 +1,5 @@
-AtYourService
-=============
+AtYourService-School
+====================
 
 A django-based app to track your service hours on the web
 

@@ -1,3 +1,9 @@
+What should happen before a 0.2 release:
+	NHS Admin page:
+		view reports of students
+		disapprove of bad events
+	Member vs. Candidate rules and tracking
+
 What should happen before a 0.9 (closed beta) release:
 	Django admin page
 	No JOINS
