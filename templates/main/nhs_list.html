@@ -5,6 +5,14 @@
 {% block content %}
 	<h2>List Students</h2>
 	{% if students %}
+	<div class="pull-right">
+		<b>Filter:</b>
+		<div class="btn-group">
+			<a id="filter-all" class="btn btn-default">All</a>
+			<a class="btn btn-default" id="filter-can">Candidates</a>
+			<a class="btn btn-default" id="filter-mem">Members</a>
+		</div>
+	</div>
 	<table class="table table-hover sortable">
 		<thead>
 			<tr>
@@ -27,10 +35,15 @@
 			{% endfor %}
 		</tbody>
 	</table>
+	{%else%}
+	<br>No students found :/
 	{% endif %}
 {% endblock content %}
 
 {% block scripts %}
+	<style>
+		tr.hidden {display:none;}
+	</style>
 	<script src='//cdn.jsdelivr.net/sorttable/2/sorttable.min.js'></script>
 	<script>
 	$(document).ready(function(){
@@ -41,6 +54,24 @@
 				return parseFloat($(this).children('.srv-hr').text()) >= {{srv_mem_min}}
 			}			
 		}).addClass('success')
+
+		$('#filter-all').on('click', function(){
+			$('tr').removeClass('hidden')
+		})
+
+		$('#filter-can').on('click', function(){
+			$('tr').removeClass('hidden')
+			$('tr').filter(function(){
+				return $(this).children('.member-status').text() == "Member"
+			}).addClass('hidden')
+		})
+
+		$('#filter-mem').on('click', function(){
+			$('tr').removeClass('hidden')
+			$('tr').filter(function(){
+				return $(this).children('.member-status').text() == "Candidate"
+			}).addClass('hidden')
+		})
 	})
 	</script>
 {% endblock scripts %}
