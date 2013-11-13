@@ -12,6 +12,7 @@
 				<th>Leadership Hours</th>
 				<th>Service Hours</th>
 				<th>Class</th>
+				<th>Membership Status</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -21,6 +22,7 @@
 					<td class='led-hr'>{{s.user_profile.leadership_hours}}</td>
 					<td class='srv-hr'>{{s.user_profile.service_hours}}</td>
 					<td>{{s.user_profile.grad_class}}</td>
+					<td class='member-status'>{{s.user_profile.get_membership_status_display}}</td>
 				</tr>
 			{% endfor %}
 		</tbody>
@@ -33,7 +35,11 @@
 	<script>
 	$(document).ready(function(){
 		$('.student-row').filter(function(){
-			return parseFloat($(this).children('.led-hr').text()) >= {{led_min}} && parseFloat($(this).children('.srv-hr').text()) >= {{srv_min}}
+			if ($(this).children('.member-status').text() == "Candidate"){
+				return parseFloat($(this).children('.led-hr').text()) >= {{led_can_min}} && parseFloat($(this).children('.srv-hr').text()) >= {{srv_can_min}}
+			} else if ($(this).children('.member-status').text() == "Member"){
+				return parseFloat($(this).children('.srv-hr').text()) >= {{srv_mem_min}}
+			}			
 		}).addClass('success')
 	})
 	</script>

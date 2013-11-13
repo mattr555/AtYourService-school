@@ -20,8 +20,9 @@ def nhs_list(request):
 	students = Group.objects.get(name='Volunteer').user_set.all()
 	settings = SiteSettings.objects.get(pk=1)
 	return render(request, 'main/nhs_list.html', {'students': students, 
-		'srv_min': settings.service_hours, 
-		'led_min': settings.leadership_hours})
+		'srv_can_min': settings.candidate_service_hours, 
+		'led_can_min': settings.candidate_leadership_hours,
+		'srv_mem_min': settings.member_service_hours})
 
 @permission_required('auth.can_view', login_url='/forbidden')
 def nhs_settings(request):

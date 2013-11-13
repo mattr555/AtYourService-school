@@ -14,9 +14,10 @@ class MyUserCreate(UserCreationForm):
     org_admin = forms.BooleanField(required=False)
     timezone = forms.ChoiceField(required=True, choices=[(i, i) for i in pytz.common_timezones])
     grad_class = forms.ChoiceField(required=True, choices=[(i, i) for i in range(2014, 2018)])
+    member_status = forms.ChoiceField(required=True, choices=UserProfile.MEMBER_STATUSES)
 
     class Meta:
-        fields = ('first_name', 'last_name', 'email', 'timezone', 'grad_class')
+        fields = ('first_name', 'last_name', 'email', 'timezone', 'grad_class', 'member_status')
         model = User
 
     def save(self, commit=True):
@@ -29,6 +30,7 @@ class MyUserCreate(UserCreationForm):
         profile = UserProfile(user=user)
         profile.timezone = self.cleaned_data['timezone']
         profile.grad_class = int(self.cleaned_data['grad_class'])
+        profile.membership_status = self.cleaned_data['member_status']
         profile.save()
         return user
 
@@ -112,12 +114,13 @@ class OrganizationCreate(forms.ModelForm):
 class NHSSettingsModify(forms.ModelForm):
     class Meta:
         model = SiteSettings
-        fields = ('service_hours', 'leadership_hours')
+        fields = ('member_service_hours', 'candidate_service_hours', 'candidate_leadership_hours')
 
     def save(self, commit=True):
         settings = SiteSettings.objects.get(pk=1)
-        settings.service_hours = self.cleaned_data['service_hours']
-        settings.leadership_hours = self.cleaned_data['leadership_hours']
+        settings.candidate_service_hours = self.cleaned_data['candidate_service_hours']
+        settings.candidate_leadership_hours = self.cleaned_data['candidate_leadership_hours']
+        settings.member_service_hours = self.cleaned_data['member_service_hours']
         if commit:
             settings.save()
         return settings

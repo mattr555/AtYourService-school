@@ -236,6 +236,11 @@ class UserProfile(models.Model):
     def leadership_hours(self):
         return self.hours_filtered('LED')
 
+    MEMBER_STATUSES = (
+        ('CAN', 'Candidate'),
+        ('MEM', 'Member')
+    )
+
     user = models.OneToOneField(User, unique=True, related_name='user_profile')
     geo_lat = models.FloatField(blank=True, null=True)
     geo_lon = models.FloatField(blank=True, null=True)
@@ -244,8 +249,10 @@ class UserProfile(models.Model):
     email_valid = models.BooleanField(default=False)
     email_validation_key = models.CharField(max_length=50, blank=True)
     grad_class = models.IntegerField()
+    membership_status = models.CharField(max_length=3, choices=MEMBER_STATUSES)
 
 class SiteSettings(models.Model):
     site = models.OneToOneField(Site, related_name='settings')
-    service_hours = models.IntegerField()
-    leadership_hours = models.IntegerField()
+    candidate_service_hours = models.IntegerField()
+    candidate_leadership_hours = models.IntegerField()
+    member_service_hours = models.IntegerField()
