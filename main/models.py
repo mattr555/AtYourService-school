@@ -226,8 +226,14 @@ class UserProfile(models.Model):
         count = 0
         for i in self.user.events.filter(hour_type=filter):
             count += i.hours()
+        """
         for i in self.user.user_events.filter(hour_type=filter):
             count += i.hours_worked
+        """
+        from django.db.models import Sum
+        userevent_count = self.user.user_events.filter(hour_type=filter).aggregate(Sum('hours_worked'))['hours_worked__sum']
+        if userevent_count:
+            count += userevent_count
         return count
 
     def service_hours(self):
