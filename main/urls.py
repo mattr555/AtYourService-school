@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from main import views, user_views, org_views, nhs_views
+from main import views, user_views, org_views, nhs_views, endpoints
 
 urlpatterns = patterns('',
     # user management
@@ -29,6 +29,15 @@ urlpatterns = patterns('',
     url(r'^nhs/settings$', nhs_views.nhs_settings, name='nhs_settings'),
 
     url(r'^forbidden/$', views.forbidden),
+
+    #ajax
+    url(r'^ajax/main/do_event.json', endpoints.do_event),
+    url(r'^ajax/main/dont_do_event.json', endpoints.dont_do_event),
+    url(r'^ajax/main/join_org.json', endpoints.join_org),
+    url(r'^ajax/main/unjoin_org.json', endpoints.unjoin_org),
+    url(r'^ajax/main/confirm_participant.json', endpoints.confirm_participant),
+    url(r'^ajax/main/unconfirm_participant.json', endpoints.unconfirm_participant),
+    url(r'^ajax/main/username_valid.json', endpoints.username_valid),
 
     url(r'^list/(?P<page>\d+)/', views.list_events, name='list_page'),
     url(r'^list/$', views.list_events_one, name='list_events'),

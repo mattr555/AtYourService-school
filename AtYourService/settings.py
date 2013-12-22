@@ -107,7 +107,6 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'south',
     'main',
-    'ajax',
 )
 
 EMAIL_SUBJECT_PREFIX = '[AtYourService] '
