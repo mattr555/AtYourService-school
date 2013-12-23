@@ -14,14 +14,12 @@
           'type': type
         },
         success: function(data) {
+          var old_text;
           button.removeClass('btn-danger').addClass('btn-success').html('Approve');
-          button.parents('tr').removeClass().addClass('danger');
-          return button.parents('tr').children('.status-field').html(data.data.status);
-        },
-        error: function() {
-          console.log(type);
-          console.log(user_id);
-          return console.log(event_id);
+          button.parents('tr').removeClass().addClass(data.data.row_class);
+          button.parents('tr').children('.status-field').html(data.data.status);
+          old_text = button.parents('tr').children('.hour-field').text();
+          return button.parents('tr').children('.hour-field').text(data.data.hours.toString() + old_text.slice(-4));
         },
         timeout: 3000,
         type: "POST"
@@ -41,9 +39,12 @@
           'type': type
         },
         success: function(data) {
+          var old_text;
           button.removeClass('btn-success').addClass('btn-danger').html('Disapprove');
-          button.parents('tr').removeClass();
-          return button.parents('tr').children('.status-field').html(data.data.status);
+          button.parents('tr').removeClass().addClass(data.data.row_class);
+          button.parents('tr').children('.status-field').html(data.data.status);
+          old_text = button.parents('tr').children('.hour-field').text();
+          return button.parents('tr').children('.hour-field').text(data.data.hours.toString() + old_text.slice(-4));
         },
         timeout: 3000,
         type: "POST"

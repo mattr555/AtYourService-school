@@ -86,6 +86,9 @@ class Event(models.Model):
     def hours(self):
         if not self.nhs_approved:
             return 0
+        return self.hours_approved()
+
+    def hours_approved(self):
         delta = self.date_end - self.date_start
         return round((delta.seconds / 60 / 60) + (delta.days * 24), 2)
 
@@ -170,6 +173,9 @@ class UserEvent(models.Model):
     def hours(self):
         if not self.nhs_approved:
             return 0
+        return self.hours_approved()
+
+    def hours_approved(self):
         return self.hours_worked
 
     def detail_url(self):

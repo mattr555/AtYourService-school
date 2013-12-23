@@ -124,28 +124,23 @@ def unconfirm_participant(request):
 @login_required
 def toggle_event_approval(request):
     e = None
-    print(request.POST.get('type'))
-    print(request.POST.get('event_id'))
-    print(request.POST.get('user_id'))
     if not request.user.has_perm('auth.can_view'):
         return Forbidden("User must be an NHS admin")
     if request.POST.get('type') == 'event':
-        print('its an event')
         e = Event.objects.get(id=int(request.POST.get('event_id')))
     elif request.POST.get('type') == 'userevent':
-        print('its a UserEvent')
         e = UserEvent.objects.get(id=int(request.POST.get('event_id')))
-    print('here')
     if not e:
         return NotFound("Event not found")
-    print('found event')
     u = User.objects.get(id=int(request.POST.get('user_id')))
     if not u:
         return NotFound("User not found")
     e.nhs_approved = not e.nhs_approved
     e.save()
     return JsonResponse({'approved': e.nhs_approved,
-        'status': e.status(u)})
+        'status': e.status(u),
+        'hours': e.hours(),
+        'row_class': e.row_class(u)})
 
 
 def username_valid(request):

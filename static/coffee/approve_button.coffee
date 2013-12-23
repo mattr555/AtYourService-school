@@ -12,12 +12,10 @@ jQuery ->
 				'type': type
 			success: (data) ->
 				button.removeClass('btn-danger').addClass('btn-success').html('Approve')
-				button.parents('tr').removeClass().addClass('danger')
+				button.parents('tr').removeClass().addClass(data.data.row_class)
 				button.parents('tr').children('.status-field').html(data.data.status)
-			error: ->
-				console.log type
-				console.log user_id
-				console.log event_id
+				old_text = button.parents('tr').children('.hour-field').text()
+				button.parents('tr').children('.hour-field').text(data.data.hours.toString() + old_text.slice(-4))
 			timeout: 3000
 			type: "POST"
 			)
@@ -36,8 +34,10 @@ jQuery ->
 				'type': type
 			success: (data) ->
 				button.removeClass('btn-success').addClass('btn-danger').html('Disapprove')
-				button.parents('tr').removeClass()
+				button.parents('tr').removeClass().addClass(data.data.row_class)
 				button.parents('tr').children('.status-field').html(data.data.status)
+				old_text = button.parents('tr').children('.hour-field').text()
+				button.parents('tr').children('.hour-field').text(data.data.hours.toString() + old_text.slice(-4))
 			timeout: 3000
 			type: "POST"
 			)

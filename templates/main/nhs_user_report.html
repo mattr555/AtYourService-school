@@ -28,7 +28,7 @@
 				{%else%}
 					<td>{{event.getOrganization}}</td>
 				{%endif%}
-				<td>{{event.hours}} {{event.hour_type}}</td>
+				<td class="hour-field">{{event.hours}} {{event.hour_type}}</td>
 				<td class="status-field">{{event|args:user|call:"status"}}</td>
 				{%if event.nhs_approved%}
 					<td><div class="btn-div"><button data-type="{% if event.has_org_url %}event{%else%}userevent{%endif%}" data-event-id="{{event.id}}" class="approve-button btn btn-xs btn-danger">Disapprove</button></div></td>
