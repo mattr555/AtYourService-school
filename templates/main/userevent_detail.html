@@ -17,9 +17,11 @@
 		<div id="map"></div>
 		{%endif%}
 	</div>
-	<div class='button-div' class='col-lg-2'>
-		<a id='delete-button' class='btn btn-danger'>Delete</a>
-	</div>
+	{% if request.user == userevent.user %}
+		<div class='button-div' class='col-lg-2'>
+			<a id='delete-button' class='btn btn-danger'>Delete</a>
+		</div>
+	{%endif%}
 </div>
 {%endblock%}
 

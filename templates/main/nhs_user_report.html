@@ -15,6 +15,7 @@
 				<th>Organization</th>
 				<th>Hours</th>
 				<th>Status</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -28,7 +29,12 @@
 					<td>{{event.getOrganization}}</td>
 				{%endif%}
 				<td>{{event.hours}} {{event.hour_type}}</td>
-				<td>{{event|args:user|call:"status"}}</td>
+				<td class="status-field">{{event|args:user|call:"status"}}</td>
+				{%if event.nhs_approved%}
+					<td><div class="btn-div"><button data-type="{% if event.has_org_url %}event{%else%}userevent{%endif%}" data-event-id="{{event.id}}" class="approve-button btn btn-xs btn-danger">Disapprove</button></div></td>
+				{%else%}
+					<td><div class="btn-div"><button data-type="{% if event.has_org_url %}event{%else%}userevent{%endif%}" data-event-id="{{event.id}}" class="approve-button btn btn-xs btn-success">Approve</button></div></td>
+				{%endif%}
 			</tr>
 			{%endfor%}
 		</tbody>
@@ -39,10 +45,17 @@
 				<td></td>
 				<td><b>Total: </b>{{user.user_profile.service_hours}} SRV, {{user.user_profile.leadership_hours}} LED</td>
 				<td></td>
+				<td></td>
 			</tr>
 		</tfoot>
 	</table>
 	{%else%}
 	No events found!
 	{%endif%}
+	<span style="display:none" id="userid">{{user.id}}</span>
 {% endblock content %}
+
+{% block scripts %}
+	<script src="/static/js/approve_button.js"></script>
+	<script src='//cdn.jsdelivr.net/sorttable/2/sorttable.min.js'></script>
+{% endblock scripts %}

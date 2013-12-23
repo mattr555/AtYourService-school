@@ -84,6 +84,8 @@ class Event(models.Model):
         return self.name
 
     def hours(self):
+        if not self.nhs_approved:
+            return 0
         delta = self.date_end - self.date_start
         return round((delta.seconds / 60 / 60) + (delta.days * 24), 2)
 
@@ -91,6 +93,8 @@ class Event(models.Model):
         return reverse('main:event_detail', args=(self.pk,))
 
     def status(self, user):
+        if not self.nhs_approved:
+            return "Not approved by NHS"
         if user == self.organizer:
             return "Organizing"
         if user in self.participants.all():
@@ -116,7 +120,8 @@ class Event(models.Model):
                             BUTTON_TEXT.get(status, ""))
 
     def row_class(self, user):
-        ROW_CLASSES = {"Unconfirmed": "warning",
+        ROW_CLASSES = {"Unconfirmed": "danger",
+                       "Not approved by NHS": "warning",
                        "Confirmed": "success"}
         return ROW_CLASSES.get(self.status(user), "")
 
@@ -156,18 +161,23 @@ class Event(models.Model):
     geo_lat = models.FloatField(blank=True, null=True)
     geo_lon = models.FloatField(blank=True, null=True)
     hour_type = models.CharField(max_length=3, choices=HOUR_TYPES)
+    nhs_approved = models.BooleanField(default=True)
 
 class UserEvent(models.Model):
     def __str__(self):
         return self.name
 
     def hours(self):
+        if not self.nhs_approved:
+            return 0
         return self.hours_worked
 
     def detail_url(self):
         return reverse('main:userevent_detail', args=(self.pk,))
 
     def status(self, user):
+        if not self.nhs_approved:
+            return "Not approved by NHS"
         if user == self.user:
             if timezone.now() < self.date_start:
                 return "Event has not occurred yet"
@@ -175,7 +185,9 @@ class UserEvent(models.Model):
         return "Not participating"
 
     def row_class(self, user):
-        return "success" if self.status(user) == "User-created Event" else ""
+        ROW_CLASSES = {"Not approved by NHS": "danger",
+                       "User-created Event": "success"}
+        return ROW_CLASSES.get(self.status(user), "")
 
     def getOrganization(self):
         return self.organization
@@ -201,6 +213,7 @@ class UserEvent(models.Model):
     geo_lon = models.FloatField(blank=True, null=True)
     hours_worked = models.FloatField('hours worked')
     hour_type = models.CharField(max_length=3, choices=HOUR_TYPES)
+    nhs_approved = models.BooleanField(default=True)
 
 class UserProfile(models.Model):
     def __str__(self):
@@ -226,14 +239,14 @@ class UserProfile(models.Model):
         count = 0
         for i in self.user.events.filter(hour_type=filter):
             count += i.hours()
-        """
         for i in self.user.user_events.filter(hour_type=filter):
-            count += i.hours_worked
+            count += i.hours()
         """
         from django.db.models import Sum
         userevent_count = self.user.user_events.filter(hour_type=filter).aggregate(Sum('hours_worked'))['hours_worked__sum']
         if userevent_count:
             count += userevent_count
+        """
         return count
 
     def service_hours(self):

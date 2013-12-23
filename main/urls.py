@@ -39,6 +39,7 @@ urlpatterns = patterns('',
     url(r'^ajax/main/confirm_participant.json', endpoints.confirm_participant),
     url(r'^ajax/main/unconfirm_participant.json', endpoints.unconfirm_participant),
     url(r'^ajax/main/username_valid.json', endpoints.username_valid),
+    url(r'^ajax/main/toggle_event_approval.json', endpoints.toggle_event_approval),
 
     url(r'^list/(?P<page>\d+)/', views.list_events, name='list_page'),
     url(r'^list/$', views.list_events_one, name='list_events'),
