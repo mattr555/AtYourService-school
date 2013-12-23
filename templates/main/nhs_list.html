@@ -26,7 +26,7 @@
 		<tbody>
 			{% for s in students %}
 				<tr class='student-row'>
-					<td>{{s.get_full_name}}</td>
+					<td><a href="{%url 'main:nhs_user_report' s.id%}">{{s.get_full_name}}</a></td>
 					<td class='led-hr'>{{s.user_profile.leadership_hours}}</td>
 					<td class='srv-hr'>{{s.user_profile.service_hours}}</td>
 					<td>{{s.user_profile.grad_class}}</td>

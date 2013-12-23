@@ -29,6 +29,8 @@ personal_settings.py
 * `SECRET_KEY`
 * `ADMINS`
 * `MANAGERS`
+* `SCHOOL_NAME`
+* `SCHOOL_NAME_SHORT`
 
 Changelog
 =========
