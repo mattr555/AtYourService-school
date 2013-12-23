@@ -123,8 +123,8 @@ class Event(models.Model):
                             BUTTON_TEXT.get(status, ""))
 
     def row_class(self, user):
-        ROW_CLASSES = {"Unconfirmed": "danger",
-                       "Not approved by NHS": "warning",
+        ROW_CLASSES = {"Unconfirmed": "warning",
+                       "Not approved by NHS": "danger",
                        "Confirmed": "success"}
         return ROW_CLASSES.get(self.status(user), "")
 

@@ -1,4 +1,11 @@
 jQuery ->
+	change_hours = (button, data) ->
+		button.parents('tr').removeClass().addClass(data.data.row_class)
+		button.parents('tr').children('.status-field').html(data.data.status)
+		old_text = button.parents('tr').children('.hour-field').text()
+		button.parents('tr').children('.hour-field').text(data.data.hours.toString() + old_text.slice(-4))
+		$('#total-hours').text(data.data.srv_hours + ' SRV, ' + data.data.led_hours + ' LED')
+
 	$('.btn-div').on('click', '.approve-button.btn-danger', ->
 		button = $(this)
 		user_id = $('#userid').text()
@@ -12,10 +19,7 @@ jQuery ->
 				'type': type
 			success: (data) ->
 				button.removeClass('btn-danger').addClass('btn-success').html('Approve')
-				button.parents('tr').removeClass().addClass(data.data.row_class)
-				button.parents('tr').children('.status-field').html(data.data.status)
-				old_text = button.parents('tr').children('.hour-field').text()
-				button.parents('tr').children('.hour-field').text(data.data.hours.toString() + old_text.slice(-4))
+				change_hours(button, data)
 			timeout: 3000
 			type: "POST"
 			)
@@ -34,10 +38,7 @@ jQuery ->
 				'type': type
 			success: (data) ->
 				button.removeClass('btn-success').addClass('btn-danger').html('Disapprove')
-				button.parents('tr').removeClass().addClass(data.data.row_class)
-				button.parents('tr').children('.status-field').html(data.data.status)
-				old_text = button.parents('tr').children('.hour-field').text()
-				button.parents('tr').children('.hour-field').text(data.data.hours.toString() + old_text.slice(-4))
+				change_hours(button, data)
 			timeout: 3000
 			type: "POST"
 			)

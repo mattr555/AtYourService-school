@@ -140,7 +140,9 @@ def toggle_event_approval(request):
     return JsonResponse({'approved': e.nhs_approved,
         'status': e.status(u),
         'hours': e.hours(),
-        'row_class': e.row_class(u)})
+        'row_class': e.row_class(u),
+        'led_hours': u.user_profile.leadership_hours(),
+        'srv_hours': u.user_profile.service_hours()})
 
 
 def username_valid(request):
