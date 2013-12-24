@@ -10,7 +10,9 @@ install:
 - pip install coverage python_coveralls --use-mirrors
 
 before_script:
-- psql -c 'create database test_AtYourSerivce-school;' -U postgres
+- psql -c 'create database AtYourSerivce;' -U postgres
+- python manage.py syncdb --noinput
+- python manage.py migrate --noinput
 
 script: coverage run manage.py test
 
