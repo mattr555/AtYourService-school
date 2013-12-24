@@ -6,3 +6,6 @@ omit =
     */python?.?/*
     */site-packages/*
     */migrations/*
+exclude_lines =
+	pass
+	pragma: no cover

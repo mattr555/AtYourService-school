@@ -28,7 +28,8 @@ def add_groups(sender, **kwargs):
         p = Permission.objects.get(codename='can_view')
         group.permissions.add(p)
     if not SiteSettings.objects.exists():
-        settings = SiteSettings(site=Site.objects.get(pk=1), candidate_leadership_hours=50, candidate_service_hours=100, member_service_hours=6).save()
+        settings = SiteSettings(site=Site.objects.get(pk=1), candidate_leadership_hours=50, 
+            candidate_service_hours=100, member_service_hours=6).save()
 
 #post_migrate.connect(add_user_permissions, sender=auth_models)
 post_migrate.connect(add_groups)

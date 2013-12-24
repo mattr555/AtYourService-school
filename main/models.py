@@ -42,7 +42,7 @@ class Organization(models.Model):
             place, (lat, lon) = geo.geocode(self.location)
             self.geo_lat = lat
             self.geo_lon = lon
-        except:
+        except: # pragma: no cover
             pass
 
     def member_count(self):
@@ -111,6 +111,7 @@ class Event(models.Model):
 
     def confirm_status(self, user):
         ROW_CLASSES = {"Unconfirmed": "warning",
+                       "Not approved by NHS": "danger",
                        "Confirmed": "success"}
         BUTTON_CLASSES = {"Unconfirmed": "btn-success",
                           "Confirmed": "btn-warning"}
@@ -137,7 +138,7 @@ class Event(models.Model):
             place, (lat, lon) = geo.geocode(self.location)
             self.geo_lat = lat
             self.geo_lon = lon
-        except:
+        except: # pragma: no cover
             pass
 
     def participant_count(self):
@@ -204,7 +205,7 @@ class UserEvent(models.Model):
             place, (lat, lon) = geo.geocode(self.location)
             self.geo_lat = lat
             self.geo_lon = lon
-        except:
+        except: # pragma: no cover
             pass
 
     has_org_url = False
@@ -231,7 +232,7 @@ class UserProfile(models.Model):
             place, (lat, lon) = geo.geocode(self.location)
             self.geo_lat = lat
             self.geo_lon = lon
-        except:
+        except: # pragma: no cover
             pass
 
     def is_nhs_admin(self):
