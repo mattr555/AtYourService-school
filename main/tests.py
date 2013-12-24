@@ -5,7 +5,7 @@ from main.models import User, UserProfile
 
 def create_test_user():
 	user = User.objects.create_user('test1', 'test@mailinator.com', 'test1')
-	prof = UserProfile(user=user, timezone='America/New_York').save()
+	prof = UserProfile(user=user, timezone='America/New_York', email_valid=True, grad_class=2016, membership_status='CAN').save()
 
 class NavbarTest(TestCase):
 	def setUp(self):

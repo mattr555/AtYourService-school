@@ -9,7 +9,10 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 if DEBUG:
-    from AtYourService.dev_settings import *
+    try:
+        from AtYourService.dev_settings import *
+    except:
+        pass
 
 from django.contrib import messages
 from django.conf import global_settings
