@@ -25,9 +25,10 @@ urlpatterns = patterns('',
 
     #NHS management
     url(r'^nhs/$', nhs_views.nhs_home, name='nhs_home'),
-    url(r'^nhs/list$', nhs_views.nhs_list, name='nhs_list'),
-    url(r'^nhs/settings$', nhs_views.nhs_settings, name='nhs_settings'),
-    url(r'^nhs/user/(?P<pk>\d+)/', nhs_views.nhs_user_report, name='nhs_user_report'),
+    url(r'^nhs/list/$', nhs_views.nhs_list, name='nhs_list'),
+    url(r'^nhs/settings/$', nhs_views.nhs_settings, name='nhs_settings'),
+    url(r'^nhs/user/(?P<pk>\d+)/$', nhs_views.nhs_user_report, name='nhs_user_report'),
+    url(r'^nhs/user/(?P<pk>\d+)/org_admin/$', nhs_views.change_org_admin, name='change_org_admin'),
 
     url(r'^forbidden/$', views.forbidden),
 

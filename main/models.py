@@ -234,6 +234,9 @@ class UserProfile(models.Model):
         except:
             pass
 
+    def is_nhs_admin(self):
+        return self.user.has_perm('auth.can_view')
+
     def is_org_admin(self):
         return self.user.has_perm('main.add_organization')
         

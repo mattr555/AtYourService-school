@@ -123,7 +123,7 @@ def unconfirm_participant(request):
 
 @login_required
 def toggle_event_approval(request):
-    e = None
+    e, u = None, None
     if not request.user.has_perm('auth.can_view'):
         return Forbidden("User must be an NHS admin")
     if request.POST.get('type') == 'event':
@@ -132,18 +132,22 @@ def toggle_event_approval(request):
         e = UserEvent.objects.get(id=int(request.POST.get('event_id')))
     if not e:
         return NotFound("Event not found")
-    u = User.objects.get(id=int(request.POST.get('user_id')))
-    if not u:
-        return NotFound("User not found")
+    if request.POST.get('user_id'):
+        u = User.objects.get(id=int(request.POST.get('user_id')))
+        if not u:
+            return NotFound("User not found")
     e.nhs_approved = not e.nhs_approved
     e.save()
-    return JsonResponse({'approved': e.nhs_approved,
-        'status': e.status(u),
-        'hours': e.hours(),
-        'row_class': e.row_class(u),
-        'led_hours': u.user_profile.leadership_hours(),
-        'srv_hours': u.user_profile.service_hours()})
-
+    if u:
+        return JsonResponse({'approved': e.nhs_approved,
+            'status': e.status(u),
+            'hours': e.hours(),
+            'row_class': e.row_class(u),
+            'led_hours': u.user_profile.leadership_hours(),
+            'srv_hours': u.user_profile.service_hours()})
+    else:
+        return JsonResponse({'approved': e.nhs_approved,
+            'hours': e.hours()})
 
 def username_valid(request):
     if request.POST.get('username', ''):

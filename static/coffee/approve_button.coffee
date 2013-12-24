@@ -23,7 +23,7 @@ jQuery ->
 			timeout: 3000
 			type: "POST"
 			)
-		undefined)
+		)
 
 	$('.btn-div').on('click', '.approve-button.btn-success', ->
 		button = $(this)
@@ -42,6 +42,6 @@ jQuery ->
 			timeout: 3000
 			type: "POST"
 			)
-		undefined)
+		)
 
-	undefined
+	
