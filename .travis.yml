@@ -5,12 +5,10 @@ python:
 
 env:
 - DJANGO_SETTINGS_MODULE="AtYourService.travis_settings"
+
 install:
 - pip install -r requirements.txt --use-mirrors
 - pip install coverage python_coveralls --use-mirrors
-
-before_script:
-- psql -c 'create database AtYourService;' -U postgres
 
 script: coverage run manage.py test
 
