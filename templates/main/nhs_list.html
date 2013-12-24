@@ -21,6 +21,7 @@
 				<th>Service Hours</th>
 				<th>Class</th>
 				<th>Membership Status</th>
+				<th>Organization Admin?</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -31,6 +32,7 @@
 					<td class='srv-hr'>{{s.user_profile.service_hours}}</td>
 					<td>{{s.user_profile.grad_class}}</td>
 					<td class='member-status'>{{s.user_profile.get_membership_status_display}}</td>
+					<td>{%if s.user_profile.is_org_admin%}Yes{%else%}No{%endif%} <a href="{%url 'main:change_org_admin' s.id%}">(Change)</a></td>
 				</tr>
 			{% endfor %}
 		</tbody>

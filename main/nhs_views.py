@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from itertools import chain
 from operator import attrgetter
 
-from main.models import Group, SiteSettings
+from main.models import Group, SiteSettings, User
 from main.forms import NHSSettingsModify
 
 @login_required
@@ -50,3 +50,15 @@ def nhs_user_report(request, pk):
                        key=attrgetter('date_end'))
     return render(request, 'main/nhs_user_report.html', {'user': user,
         'events': event_set})
+
+@permission_required('auth.can_view', login_url='/forbidden')
+def change_org_admin(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    group = Group.objects.get(name="Org_Admin")
+    if user not in group.user_set.all():
+        group.user_set.add(user)
+    else:
+        group.user_set.remove(user)
+    if request.GET.get('next'):
+        return HttpResponseRedirect(request.GET.get('next'))
+    return HttpResponseRedirect(reverse('main:nhs_list'))

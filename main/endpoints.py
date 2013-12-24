@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound
-from main.models import Event, Organization
+from main.models import Event, Organization, UserEvent
 import json
 from decorator import decorator
 
 def JsonResponse(data):
-    resp = json.dumps({'success': True, 'data': data})
-    return HttpResponse(resp, mimetype='application/json')
+    content = json.dumps({'success': True, 'data': data})
+    return HttpResponse(content, mimetype='application/json')
 
 def NotFound(msg):
     error = {
@@ -35,7 +35,7 @@ def Forbidden(msg):
 @decorator
 def login_required(f, *args, **kwargs):
     if not args[0].user.is_authenticated:
-        raise Forbidden('User is not logged in')
+        return Forbidden('User is not logged in')
     return f(*args, **kwargs)
 
 @login_required
@@ -49,7 +49,7 @@ def do_event(request):
             data = {'user_status': event.status(request.user)}
             return JsonResponse(data)
         else:
-            raise Forbidden('User must be a volunteer')
+            return Forbidden('User must be a volunteer')
 
 @login_required
 def dont_do_event(request):
@@ -69,7 +69,7 @@ def join_org(request):
             org.members.add(request.user)
             return JsonResponse({})
         else:
-            raise Forbidden('User must be a volunteer')
+            return Forbidden('User must be a volunteer')
 
 @login_required
 def unjoin_org(request):
@@ -83,43 +83,72 @@ def unjoin_org(request):
 def confirm_participant(request):
     e = Event.objects.get(id=int(request.POST.get('event_id')))
     if not e:
-        raise NotFound("Event not found")
+        return NotFound("Event not found")
     if request.user.id == e.organizer_id:
         u = User.objects.get(id=int(request.POST.get('user_id')))
         if not u:
-            raise NotFound("User not found")
+            return NotFound("User not found")
         if u in e.participants.all():
             e.confirmed_participants.add(u)
         else:
-            raise NotFound("User is not a participant")
+            return NotFound("User is not a participant")
         status = e.confirm_status(u)
         return JsonResponse({'status': status.status,
                 'row_class': status.row_class,
                 'button_class': status.button_class,
                 'button_text': status.button_text})
     else:
-        raise Forbidden("User must be event organizer")
+        return Forbidden("User must be event organizer")
 
 @login_required
 def unconfirm_participant(request):
     e = Event.objects.get(id=int(request.POST.get('event_id')))
     if not e:
-        raise NotFound("Event not found")
+        return NotFound("Event not found")
     if request.user.id == e.organizer_id:
         u = User.objects.get(id=int(request.POST.get('user_id')))
         if not u:
-            raise NotFound("User not found")
+            return NotFound("User not found")
         if u in e.participants.all() and u in e.confirmed_participants.all():
             e.confirmed_participants.remove(u)
         else:
-            raise NotFound("User is not a participant")
+            return NotFound("User is not a participant")
         status = e.confirm_status(u)
         return JsonResponse({'status': status.status,
                 'row_class': status.row_class,
                 'button_class': status.button_class,
                 'button_text': status.button_text})
     else:
-        raise Forbidden("User must be event organizer")
+        return Forbidden("User must be event organizer")
+
+@login_required
+def toggle_event_approval(request):
+    e, u = None, None
+    if not request.user.has_perm('auth.can_view'):
+        return Forbidden("User must be an NHS admin")
+    if request.POST.get('type') == 'event':
+        e = Event.objects.get(id=int(request.POST.get('event_id')))
+    elif request.POST.get('type') == 'userevent':
+        e = UserEvent.objects.get(id=int(request.POST.get('event_id')))
+    if not e:
+        return NotFound("Event not found")
+    if request.POST.get('user_id'):
+        u = User.objects.get(id=int(request.POST.get('user_id')))
+        if not u:
+            return NotFound("User not found")
+    e.nhs_approved = not e.nhs_approved
+    e.save()
+    if u:
+        return JsonResponse({'approved': e.nhs_approved,
+            'status': e.status(u),
+            'hours': e.hours(),
+            'row_class': e.row_class(u),
+            'led_hours': u.user_profile.leadership_hours(),
+            'srv_hours': u.user_profile.service_hours()})
+    else:
+        return JsonResponse({'approved': e.nhs_approved,
+            'hours': e.hours(),
+            'status': e.status(request.user)})
 
 def username_valid(request):
     if request.POST.get('username', ''):
