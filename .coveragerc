@@ -1,0 +1,8 @@
+[run]
+source = AtYourService,main
+
+[report]
+omit =
+    */python?.?/*
+    */site-packages/*
+    */migrations/*
