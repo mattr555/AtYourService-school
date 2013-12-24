@@ -10,8 +10,9 @@
       button.parents('tr').children('.hour-field').text(data.data.hours.toString() + old_text.slice(-4));
       return $('#total-hours').text(data.data.srv_hours + ' SRV, ' + data.data.led_hours + ' LED');
     };
-    $('.btn-div').on('click', '.approve-button.btn-danger', function() {
+    $('.btn-div').on('click', '.approve-button.btn-danger', function(e) {
       var button, event_id, response, type, user_id;
+      e.stopPropagation();
       button = $(this);
       user_id = $('#userid').text();
       event_id = button.data('event-id');
@@ -30,8 +31,9 @@
         type: "POST"
       });
     });
-    return $('.btn-div').on('click', '.approve-button.btn-success', function() {
+    return $('.btn-div').on('click', '.approve-button.btn-success', function(e) {
       var button, event_id, response, type, user_id;
+      e.stopPropagation();
       button = $(this);
       user_id = $('#userid').text();
       event_id = button.data('event-id');

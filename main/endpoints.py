@@ -147,7 +147,8 @@ def toggle_event_approval(request):
             'srv_hours': u.user_profile.service_hours()})
     else:
         return JsonResponse({'approved': e.nhs_approved,
-            'hours': e.hours()})
+            'hours': e.hours(),
+            'status': e.status(request.user)})
 
 def username_valid(request):
     if request.POST.get('username', ''):

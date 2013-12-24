@@ -41,9 +41,15 @@
 			<b>Location: </b>{{event.location}}<br>
 			<b>Time: </b>{{event.date_start}}
 		</div>
-		<div class="button-div" class="col-lg-2 pull-right">
+		<div class="button-div col-lg-2 pull-right">
 			{% if request.user == event.organizer %}
 			<button class='btn btn-info commit-button disabled' data-id={{event.id}}>Organizing</button>
+			{% elif request.user.user_profile.is_nhs_admin %}
+				{%if event.nhs_approved%}
+				<button data-event-id="{{event.id}}" data-type="event" class='commit-button approve-button btn btn-danger'>Disapprove</button>
+				{%else%}
+				<button data-event-id="{{event.id}}" data-type="event" class='commit-button approve-button btn btn-success'>Approve</button>
+				{%endif%}
 			{% elif request.user in event.participants.all %}
 			<button class='btn btn-success commit-button commit-disabled disabled' data-id={{event.id}}>Participating</button>
 			{%else%}
@@ -90,7 +96,7 @@ $(document).ready(function(){
 })
 </script>
 <script src="/static/js/event_button.js"></script>
-
+<script src="/static/js/approve_detail_button.js"></script>
 {%endblock%}
 
 

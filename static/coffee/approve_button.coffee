@@ -6,7 +6,8 @@ jQuery ->
 		button.parents('tr').children('.hour-field').text(data.data.hours.toString() + old_text.slice(-4))
 		$('#total-hours').text(data.data.srv_hours + ' SRV, ' + data.data.led_hours + ' LED')
 
-	$('.btn-div').on('click', '.approve-button.btn-danger', ->
+	$('.btn-div').on('click', '.approve-button.btn-danger', (e) ->
+		e.stopPropagation()
 		button = $(this)
 		user_id = $('#userid').text()
 		event_id = button.data 'event-id'
@@ -25,7 +26,8 @@ jQuery ->
 			)
 		)
 
-	$('.btn-div').on('click', '.approve-button.btn-success', ->
+	$('.btn-div').on('click', '.approve-button.btn-success', (e) ->
+		e.stopPropagation()
 		button = $(this)
 		user_id = $('#userid').text()
 		event_id = button.data 'event-id'

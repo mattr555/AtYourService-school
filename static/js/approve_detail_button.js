@@ -4,11 +4,13 @@
     var change_hours;
     change_hours = function(data) {
       var old_text;
+      $('#user-status').text(data.data.status);
       old_text = $('#hours').text();
       return $('#hours').text(data.data.hours.toString() + old_text.slice(-4));
     };
-    $('.button-div').on('click', '.approve-button.btn-danger', function() {
+    $('.button-div').on('click', '.approve-button.btn-danger', function(e) {
       var button, event_id, response, type;
+      e.stopPropagation();
       button = $(this);
       event_id = button.data('event-id');
       type = button.data('type');
@@ -18,6 +20,7 @@
           'type': type
         },
         success: function(data) {
+          console.log('disapprove called');
           button.removeClass('btn-danger').addClass('btn-success').html('Approve');
           return change_hours(data);
         },
@@ -25,8 +28,9 @@
         type: "POST"
       });
     });
-    return $('.button-div').on('click', '.approve-button.btn-success', function() {
+    return $('.button-div').on('click', '.approve-button.btn-success', function(e) {
       var button, event_id, response, type;
+      e.stopPropagation();
       button = $(this);
       event_id = button.data('event-id');
       type = button.data('type');
@@ -36,6 +40,7 @@
           'type': type
         },
         success: function(data) {
+          console.log('approve called');
           button.removeClass('btn-success').addClass('btn-danger').html('Disapprove');
           return change_hours(data);
         },
