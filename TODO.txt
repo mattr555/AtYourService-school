@@ -1,13 +1,12 @@
 What should happen before a 0.2 release:
-	NHS Admin page:
-		view reports of students
-		disapprove of bad events
 	Member vs. Candidate rules and tracking
+	Monthly rules
 
 What should happen before a 0.9 (closed beta) release:
 	Django admin page
 	No JOINS
 	Caching
+	Travis CI/Coveralls
 
 What should happen before a 1.0 release:
 	Test suite
@@ -27,3 +26,7 @@ Done:
 		Adding events defined by organization
 		Confirmation of user attendance
 		Email validation
+	0.2.0:
+		NHS Admin page:
+			view reports of students
+			disapprove of bad events
