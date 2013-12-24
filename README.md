@@ -1,6 +1,9 @@
 AtYourService-School
 ====================
 
+[![Build Status](https://travis-ci.org/mattr555/AtYourService-school.png?branch=develop)](https://travis-ci.org/mattr555/AtYourService-school)
+[![Coverage Status](https://coveralls.io/repos/mattr555/AtYourService-school/badge.png)](https://coveralls.io/r/mattr555/AtYourService-school)
+
 A django-based app to track your service hours on the web
 
 This is the version of AtYourService to run on a school domain
