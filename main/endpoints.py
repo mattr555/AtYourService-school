@@ -144,7 +144,8 @@ def toggle_event_approval(request):
             'hours': e.hours(),
             'row_class': e.row_class(u),
             'led_hours': u.user_profile.leadership_hours(),
-            'srv_hours': u.user_profile.service_hours()})
+            'srv_hours': u.user_profile.service_hours(),
+            'srv_hours_last_month': u.user_profile.service_hours_last_month()})
     else:
         return JsonResponse({'approved': e.nhs_approved,
             'hours': e.hours(),

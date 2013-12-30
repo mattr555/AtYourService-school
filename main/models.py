@@ -127,7 +127,10 @@ class Event(models.Model):
         ROW_CLASSES = {"Unconfirmed": "warning",
                        "Not approved by NHS": "danger",
                        "Confirmed": "success"}
-        return ROW_CLASSES.get(self.status(user), "")
+        status = ROW_CLASSES.get(self.status(user), "")
+        if self.from_last_month():
+            return status + ' last-month'
+        return status
 
     def getOrganization(self):
         return self.organization.name
@@ -149,6 +152,13 @@ class Event(models.Model):
 
     def date_end_input(self):
         return datetime.datetime.strftime(self.date_end, '%m/%d/%y %I:%M %p')
+
+    def from_last_month(self):
+        last_month_end = timezone.make_aware(timezone.datetime(timezone.now().year, timezone.now().month, 1)
+            - timezone.timedelta(seconds=1), self.date_start.tzinfo)
+        last_month_start = timezone.make_aware(timezone.datetime(last_month_end.year, last_month_end.month, 1), 
+            self.date_start.tzinfo)
+        return self.date_start >= last_month_start and self.date_start < last_month_end
 
     has_org_url = True
     objects = EventManager()
@@ -194,7 +204,10 @@ class UserEvent(models.Model):
     def row_class(self, user):
         ROW_CLASSES = {"Not approved by NHS": "danger",
                        "User-created Event": "success"}
-        return ROW_CLASSES.get(self.status(user), "")
+        status = ROW_CLASSES.get(self.status(user), "")
+        if self.from_last_month():
+            return status + ' last-month'
+        return status
 
     def getOrganization(self):
         return self.organization
@@ -207,6 +220,13 @@ class UserEvent(models.Model):
             self.geo_lon = lon
         except: # pragma: no cover
             pass
+
+    def from_last_month(self):
+        last_month_end = timezone.make_aware(timezone.datetime(timezone.now().year, timezone.now().month, 1)
+            - timezone.timedelta(seconds=1), self.date_start.tzinfo)
+        last_month_start = timezone.make_aware(timezone.datetime(last_month_end.year, last_month_end.month, 1), 
+            self.date_start.tzinfo)
+        return self.date_start >= last_month_start and self.date_start < last_month_end
 
     has_org_url = False
     user = models.ForeignKey(User, related_name='user_events')
@@ -253,14 +273,15 @@ class UserProfile(models.Model):
             for i in self.user.user_events.filter(hour_type=filter):
                 count += i.hours()
         else:
-            this_month = timezone.datetime(timezone.now().year, timezone.now().month, 1)
+            last_month_end = timezone.datetime(timezone.now().year, timezone.now().month, 1) - timezone.timedelta(seconds=1)
+            last_month_start = timezone.datetime(last_month_end.year, last_month_end.month, 1)
             for i in self.user.events.filter(hour_type=filter,
-                date_start__gte=this_month - timezone.timedelta(months=1),
-                date_start__lte=this_month):
+                date_start__gte=last_month_start,
+                date_start__lte=last_month_end):
                 count += i.hours()
             for i in self.user.user_events.filter(hour_type=filter,
-                date_start__gte=this_month - timezone.timedelta(months=1),
-                date_start__lte=this_month):
+                date_start__gte=last_month_start,
+                date_start__lte=last_month_end):
                 count += i.hours()
         """
         from django.db.models import Sum

@@ -63,17 +63,8 @@ def nhs_user_report(request, pk):
     if user.user_profile.membership_status == 'CAN':
         return render(request, 'main/nhs_candidate_report.html', {'user': user,
             'events': event_set})
-
-    this_month = timezone.datetime(timezone.now().year, timezone.now().month, 1)
-    last_month_event = list(user.events.filter(date_start__gte=this_month - timezone.timedelta(months=1),
-        date_start__lte=this_month))
-    last_month_user_event = list(user.user_events.filter(date_start__gte=this_month - timezone.timedelta(months=1),
-        date_start__lte=this_month))
-    last_month_event_set = sorted(chain(last_month_event, last_month_user_event),
-        key=attrgetter('date_end'))
     return render(request, 'main/nhs_member_report.html', {'user': user,
-        'events': event_set,
-        'last_month_events': last_month_event_set})
+        'events': event_set})
 
 @permission_required('auth.can_view', login_url='/forbidden')
 def change_org_admin(request, pk):

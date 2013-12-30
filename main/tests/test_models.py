@@ -4,6 +4,7 @@ from django.utils import timezone
 from main.models import User, UserProfile, Organization, Event, UserEvent, Group, haversin
 import string
 import random
+import pytz
 from collections import namedtuple
 
 def create_test_user(name=None):
@@ -80,6 +81,9 @@ class EventTest(TestCase):
         self.assertEqual(self.e.row_class(new_user), '')
         self.e.participants.clear()
         self.e.confirmed_participants.clear()
+        self.e.date_start = timezone.make_aware(timezone.datetime(timezone.now().year, timezone.now().month, 1) 
+            - timezone.timedelta(hours=1), timezone.utc)
+        self.assertIn('last-month', self.e.row_class(new_user))
 
     def test_event_getOrganization(self):
         self.assertEqual(self.e.getOrganization(), 'org')
@@ -141,6 +145,9 @@ class UserEventTest(TestCase):
         self.e.date_start += timezone.timedelta(days=5)
         self.assertEqual(self.e.status(self.user), 'Event has not occurred yet')
         self.assertEqual(self.e.row_class(self.user), '')
+        self.e.date_start = timezone.make_aware(timezone.datetime(timezone.now().year, timezone.now().month, 1) 
+            - timezone.timedelta(hours=1), timezone.utc)
+        self.assertIn('last-month', self.e.row_class(self.user))
 
     def test_userevent_getOrganization(self):
         self.assertEqual(self.e.getOrganization(), 'do stuff org')
@@ -189,13 +196,13 @@ class UserProfileTest(TestCase):
 
     #would like to test True case, but _group_perm_cache seems to be a limitation..
     def test_userprof_nhsadmin(self):
-        self.assertEqual(self.up.is_nhs_admin(), False)
+        self.assertFalse(self.up.is_nhs_admin())
 
     def test_userprof_orgadmin(self):
-        self.assertEqual(self.up.is_org_admin(), False)
+        self.assertFalse(self.up.is_org_admin())
 
     def test_userprof_volunteer(self):
-        self.assertEqual(self.up.is_volunteer(), False)
+        self.assertFalse(self.up.is_volunteer())
 
     def test_userprof_service_hours(self):
         self.assertEqual(self.up.service_hours(), 0)
@@ -210,6 +217,16 @@ class UserProfileTest(TestCase):
             date_end=timezone.now() + timezone.timedelta(hours=1), location='New York City, NY', hour_type='LED', 
             hours_worked=1).save()
         self.assertEqual(self.up.leadership_hours(), 1)
+
+    def test_userprof_service_hours_last_month(self):
+        self.assertEqual(self.up.service_hours_last_month(), 0)
+        e = create_test_event()
+        e.participants.add(self.u)
+        e.date_start = timezone.make_aware(timezone.datetime(timezone.now().year, timezone.now().month, 1) 
+            - timezone.timedelta(hours=1), pytz.timezone('America/New_York'))
+        e.date_end = e.date_start + timezone.timedelta(hours=1)
+        e.save()
+        self.assertEqual(self.up.service_hours_last_month(), 1)
 
     def test_userprof_populate_geo(self):
         self.up.populate_geo()
