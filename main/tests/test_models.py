@@ -7,7 +7,7 @@ import random
 from collections import namedtuple
 
 def create_test_user(name=None):
-    if not name:
+    if not name: # pragma: no cover
         name = ''.join([random.choice(string.ascii_letters) for i in range(10)])
     user = User.objects.create_user(name, 'test@mailinator.com', name)
     prof = UserProfile(user=user, timezone='America/New_York', email_valid=True, grad_class=2016, 
@@ -16,14 +16,14 @@ def create_test_user(name=None):
     return user
 
 def create_test_organization(u=None):
-    if not u:
+    if not u: # pragma: no cover
         u = create_test_user()
     o = Organization(name='org', description='we do stuff', location='New York City, NY', admin=u)
     o.save()
     return o
 
 def create_test_event(u=None, o=None):
-    if not o:
+    if not o: # pragma: no cover
         o = create_test_organization(u)
     e = Event(name='do stuff', organizer=o.admin, organization=o, description='yeah', date_start=timezone.now(),
         date_end=timezone.now() + timezone.timedelta(hours=1), location='New York City, NY', hour_type='SRV')
@@ -31,35 +31,12 @@ def create_test_event(u=None, o=None):
     return e
 
 def create_test_userevent(u=None):
-    if not u:
+    if not u: # pragma: no cover
         u = create_test_user()
     e = UserEvent(name='do stuff', user=u, organization='do stuff org', description='yeah', date_start=timezone.now(), 
         date_end=timezone.now() + timezone.timedelta(hours=1), location='New York City, NY', hour_type='SRV', hours_worked=1)
     e.save()
     return e
-
-class NavbarTest(TestCase):
-    def setUp(self):
-        create_test_user('test1')
-        
-    def test_navbar_no_user(self):
-        response = self.client.get('/')
-        self.assertContains(response, 'Not logged in.')
-
-    def test_navbar_user_logged_in(self):
-        self.client.login(username='test1', password='test1')
-        response = self.client.get('/')
-        self.assertContains(response, 'Logged in as')
-        self.assertContains(response, 'test1')
-
-class UserTest(TestCase):
-    def setUp(self):
-        create_test_user('test1')
-
-    def test_user_login(self):
-        self.client.login(username='test1', password='test1')
-        response = self.client.get('/')
-        self.assertEqual(response.context['user'].email, 'test@mailinator.com')
 
 class EventTest(TestCase):
     def setUp(self):
@@ -115,8 +92,8 @@ class EventTest(TestCase):
         self.e.participants.clear()
 
     def test_event_date_input(self):
-        self.assertRegexpMatches(self.e.date_start_input(), '(\d{2}/){2}\d{2} \d{2}:\d{2} (AM|PM)')
-        self.assertRegexpMatches(self.e.date_end_input(), '(\d{2}/){2}\d{2} \d{2}:\d{2} (AM|PM)')
+        self.assertRegex(self.e.date_start_input(), '(\d{2}/){2}\d{2} \d{2}:\d{2} (AM|PM)')
+        self.assertRegex(self.e.date_end_input(), '(\d{2}/){2}\d{2} \d{2}:\d{2} (AM|PM)')
 
     def test_event_populate_geo(self):
         self.e.populate_geo()

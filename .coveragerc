@@ -7,5 +7,5 @@ omit =
     */site-packages/*
     */migrations/*
 exclude_lines =
-	pass
+	pass$
 	pragma: no cover
