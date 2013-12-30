@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from test_models import create_test_user
+from .test_models import create_test_user
 
 class NavbarTest(TestCase):
     def setUp(self):

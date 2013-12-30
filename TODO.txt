@@ -6,7 +6,7 @@ What should happen before a 0.9 (closed beta) release:
 	Django admin page
 	No JOINS
 	Caching
-	Travis CI/Coveralls
+	Make more permanent changes POST, not GET
 
 What should happen before a 1.0 release:
 	Test suite
@@ -30,3 +30,4 @@ Done:
 		NHS Admin page:
 			view reports of students
 			disapprove of bad events
+		Travis CI/Coveralls

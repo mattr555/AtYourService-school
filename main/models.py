@@ -244,13 +244,24 @@ class UserProfile(models.Model):
     def is_volunteer(self):
         return self.user.has_perm('main.add_userevent')
 
-    def hours_filtered(self, filter):
+    def hours_filtered(self, filter, last_month=False):
         #slow af function
         count = 0
-        for i in self.user.events.filter(hour_type=filter):
-            count += i.hours()
-        for i in self.user.user_events.filter(hour_type=filter):
-            count += i.hours()
+        if not last_month:
+            for i in self.user.events.filter(hour_type=filter):
+                count += i.hours()
+            for i in self.user.user_events.filter(hour_type=filter):
+                count += i.hours()
+        else:
+            this_month = timezone.datetime(timezone.now().year, timezone.now().month, 1)
+            for i in self.user.events.filter(hour_type=filter,
+                date_start__gte=this_month - timezone.timedelta(months=1),
+                date_start__lte=this_month):
+                count += i.hours()
+            for i in self.user.user_events.filter(hour_type=filter,
+                date_start__gte=this_month - timezone.timedelta(months=1),
+                date_start__lte=this_month):
+                count += i.hours()
         """
         from django.db.models import Sum
         userevent_count = self.user.user_events.filter(hour_type=filter).aggregate(Sum('hours_worked'))['hours_worked__sum']
@@ -261,6 +272,9 @@ class UserProfile(models.Model):
 
     def service_hours(self):
         return self.hours_filtered('SRV')
+
+    def service_hours_last_month(self):
+        return self.hours_filtered('SRV', True)
 
     def leadership_hours(self):
         return self.hours_filtered('LED')

@@ -3,24 +3,15 @@
 {% block title %}List Students{% endblock title %}
 
 {% block content %}
-	<div class="pull-left"><h2>List Students</h2></div>
+	<div><h2>List {{student_type}}</h2></div>
 	{% if students %}
-	<div class="pull-right" style="padding-top:20px">
-		<b>Filter:</b>
-		<div class="btn-group">
-			<a id="filter-all" class="btn btn-default">All</a>
-			<a class="btn btn-default" id="filter-can">Candidates</a>
-			<a class="btn btn-default" id="filter-mem">Members</a>
-		</div>
-	</div>
 	<table class="table table-hover sortable">
 		<thead>
 			<tr>
 				<th>Name</th>
-				<th>Leadership Hours</th>
-				<th>Service Hours</th>
+				{% if student_type == "Candidates" %}<th>Leadership Hours</th>{%endif%}
+				<th>Service Hours{%if student_type == "Members"%} Last Month{%endif%}</th>
 				<th>Class</th>
-				<th>Membership Status</th>
 				<th>Organization Admin?</th>
 			</tr>
 		</thead>
@@ -28,10 +19,13 @@
 			{% for s in students %}
 				<tr class='student-row'>
 					<td><a href="{%url 'main:nhs_user_report' s.id%}">{{s.get_full_name}}</a></td>
-					<td class='led-hr'>{{s.user_profile.leadership_hours}}</td>
-					<td class='srv-hr'>{{s.user_profile.service_hours}}</td>
+					{% if student_type == "Candidates" %}
+						<td class='led-hr'>{{s.user_profile.leadership_hours}}</td>
+						<td class='srv-hr'>{{s.user_profile.service_hours}}</td>
+					{%else%}
+						<td class='srv-hr'>{{s.user_profile.service_hours_last_month}}</td>
+					{%endif%}
 					<td>{{s.user_profile.grad_class}}</td>
-					<td class='member-status'>{{s.user_profile.get_membership_status_display}}</td>
 					<td>{%if s.user_profile.is_org_admin%}Yes{%else%}No{%endif%} <a href="{%url 'main:change_org_admin' s.id%}">(Change)</a></td>
 				</tr>
 			{% endfor %}
@@ -50,30 +44,12 @@
 	<script>
 	$(document).ready(function(){
 		$('.student-row').filter(function(){
-			if ($(this).children('.member-status').text() == "Candidate"){
+			if ("{{student_type}}" == "Candidates"){
 				return parseFloat($(this).children('.led-hr').text()) >= {{led_can_min}} && parseFloat($(this).children('.srv-hr').text()) >= {{srv_can_min}}
-			} else if ($(this).children('.member-status').text() == "Member"){
+			} else if ("{{student_type}}" == "Members"){
 				return parseFloat($(this).children('.srv-hr').text()) >= {{srv_mem_min}}
 			}			
 		}).addClass('success')
-
-		$('#filter-all').on('click', function(){
-			$('tr').removeClass('hidden')
-		})
-
-		$('#filter-can').on('click', function(){
-			$('tr').removeClass('hidden')
-			$('tr').filter(function(){
-				return $(this).children('.member-status').text() == "Member"
-			}).addClass('hidden')
-		})
-
-		$('#filter-mem').on('click', function(){
-			$('tr').removeClass('hidden')
-			$('tr').filter(function(){
-				return $(this).children('.member-status').text() == "Candidate"
-			}).addClass('hidden')
-		})
 	})
 	</script>
 {% endblock scripts %}
