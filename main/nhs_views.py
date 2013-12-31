@@ -67,10 +67,12 @@ def nhs_user_report(request, pk):
     user_event = list(user.user_events.all())
     event_set = sorted(chain(event, user_event),
         key=attrgetter('date_end'))
+    settings = SiteSettings.objects.get(pk=1)
     if user.user_profile.membership_status == 'CAN':
         return render(request, 'main/nhs_candidate_report.html', {'user': user,
-            'events': event_set})
-    settings = SiteSettings.objects.get(pk=1)
+            'events': event_set,
+            'srv_min': settings.candidate_service_hours,
+            'led_min': settings.candidate_leadership_hours})
     return render(request, 'main/nhs_member_report.html', {'user': user,
         'events': event_set,
         'srv_min': settings.member_service_hours})

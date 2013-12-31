@@ -10,6 +10,15 @@
 	{%if request.user.user_profile.membership_status == "CAN"%}
 	<!-- stuff about changing candidate to member -->
 	{%endif%}
-	<hr>
+	<br>
 	<b>Location: </b>{{request.user.user_profile.location}} <a href="{% url 'main:change_loc'%}">Change</a>
+	<br>
+	You have {{request.user.user_profile.demerit_count}} demerit{{request.user.user_profile.demerit_count|pluralize}}.
+	{%if request.user.user_profile.demerit_count%}
+		<ul>
+			{%for d in request.user.demerits.all%}
+				<li>{{d.date}}: {{d.reason}}</li>
+			{%endfor%}
+		</ul>
+	{%endif%}
 {% endblock content %}

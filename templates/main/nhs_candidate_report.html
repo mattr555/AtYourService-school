@@ -53,7 +53,12 @@
 	No events found!
 	{%endif%}
 	<br>
-	{{user.get_full_name}} is {%if not user.user_profile.is_org_admin%}not {%endif%}an organization admin. <a href="{%url 'main:change_org_admin' user.id%}?next=..">Change.</a>
+	{{user.get_full_name}} is {%if not user.user_profile.is_org_admin%}not {%endif%}an organization admin. <a href="{%url 'main:change_org_admin' user.id%}?next=..">Change.</a><br>
+	{%if user.user_profile.leadership_hours >= led_min and user.user_profile.service_hours >= srv_min %}
+		{{user.get_full_name}} has completed their required leadership and service hours for induction. <br><a href="" class="btn btn-success">Induct</a>
+	{%else%}
+		{{user.get_full_name}} has not completed their required leadership and service hours for induction.
+	{%endif%}
 	<span style="display:none" id="userid">{{user.id}}</span>
 {% endblock content %}
 
