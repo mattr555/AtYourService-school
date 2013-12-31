@@ -11,6 +11,7 @@
 				<th>Name</th>
 				{% if student_type == "Candidates" %}<th>Leadership Hours</th>{%endif%}
 				<th>Service Hours{%if student_type == "Members"%} Last Month{%endif%}</th>
+				{% if student_type == "Members" %}<th>Demerits</th>{%endif%}
 				<th>Class</th>
 				<th>Organization Admin?</th>
 			</tr>
@@ -24,6 +25,7 @@
 						<td class='srv-hr'>{{s.user_profile.service_hours}}</td>
 					{%else%}
 						<td class='srv-hr'>{{s.user_profile.service_hours_last_month}}</td>
+						<td>{{s.user_profile.demerit_count}}</td>
 					{%endif%}
 					<td>{{s.user_profile.grad_class}}</td>
 					<td>{%if s.user_profile.is_org_admin%}Yes{%else%}No{%endif%} <a href="{%url 'main:change_org_admin' s.id%}">(Change)</a></td>
@@ -50,6 +52,10 @@
 				return parseFloat($(this).children('.srv-hr').text()) >= {{srv_mem_min}}
 			}			
 		}).addClass('success')
+
+		if ("{{student_type}}" == "Members"){
+			$('.student-row:not(.success)').addClass('danger')
+		}
 	})
 	</script>
 {% endblock scripts %}

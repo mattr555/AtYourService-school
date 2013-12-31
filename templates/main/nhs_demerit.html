@@ -1,0 +1,15 @@
+{%extends 'main/base.html'%}
+
+{% block title %}Demerit {{user.get_full_name}}{% endblock title %}
+
+{% block content %}
+	<h2>Demerit {{user.get_full_name}}</h2>
+	You're about to demerit {{user.get_full_name}}. This user will be notified by email. Please provide an explanation for the demerit below:
+	<form action="" method="post">
+		{%csrf_token%}
+		<div class="form-group">
+			<textarea name="reason" class="form-control" rows="5"></textarea>	
+		</div>
+		<input type="submit" class="btn btn-primary">
+	</form>
+{% endblock content %}

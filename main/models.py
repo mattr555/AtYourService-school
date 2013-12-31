@@ -300,6 +300,9 @@ class UserProfile(models.Model):
     def leadership_hours(self):
         return self.hours_filtered('LED')
 
+    def demerit_count(self):
+        return self.user.demerits.count()
+
     MEMBER_STATUSES = (
         ('CAN', 'Candidate'),
         ('MEM', 'Member')
@@ -320,3 +323,7 @@ class SiteSettings(models.Model):
     candidate_service_hours = models.IntegerField()
     candidate_leadership_hours = models.IntegerField()
     member_service_hours = models.IntegerField()
+
+class Demerit(models.Model):
+    user = models.ForeignKey(User, related_name='demerits')
+    reason = models.CharField(max_length=1000)

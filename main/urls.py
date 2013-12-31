@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^nhs/settings/$', nhs_views.nhs_settings, name='nhs_settings'),
     url(r'^nhs/user/(?P<pk>\d+)/$', nhs_views.nhs_user_report, name='nhs_user_report'),
     url(r'^nhs/user/(?P<pk>\d+)/org_admin/$', nhs_views.change_org_admin, name='change_org_admin'),
+    url(r'^nhs/user/(?P<pk>\d+)/demerit/$', nhs_views.demerit, name='nhs_demerit'),
 
     url(r'^forbidden/$', views.forbidden),
 

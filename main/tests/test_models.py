@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone
 
-from main.models import User, UserProfile, Organization, Event, UserEvent, Group, haversin
+from main.models import User, UserProfile, Organization, Event, UserEvent, Group, Demerit, haversin
 import string
 import random
 import pytz
@@ -232,3 +232,8 @@ class UserProfileTest(TestCase):
         self.up.populate_geo()
         self.assertEqual(round(self.up.geo_lat,4), 40.7144)
         self.assertEqual(round(self.up.geo_lon,4), -74.006)
+
+    def test_userprof_demerit_count(self):
+        self.assertEqual(self.up.demerit_count(), 0)
+        Demerit(user=self.u, reason='just because').save()
+        self.assertEqual(self.up.demerit_count(), 1)

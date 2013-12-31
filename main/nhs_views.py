@@ -3,13 +3,20 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.utils import timezone
+from django.template.loader import render_to_string
+from django.conf import settings as dj_settings
+from django.core.mail import EmailMultiAlternatives
 
 from itertools import chain
 from operator import attrgetter
 
-from main.models import Group, SiteSettings, User
+from main.models import Group, SiteSettings, User, Demerit, Site
 from main.forms import NHSSettingsModify
+
+def send_html_mail(subject, plaintext, html, from_address, recipients):
+    msg = EmailMultiAlternatives(subject, plaintext, from_address, recipients)
+    msg.attach_alternative(html, 'text/html')
+    msg.send()
 
 @login_required
 def nhs_home(request):
@@ -63,8 +70,10 @@ def nhs_user_report(request, pk):
     if user.user_profile.membership_status == 'CAN':
         return render(request, 'main/nhs_candidate_report.html', {'user': user,
             'events': event_set})
+    settings = SiteSettings.objects.get(pk=1)
     return render(request, 'main/nhs_member_report.html', {'user': user,
-        'events': event_set})
+        'events': event_set,
+        'srv_min': settings.member_service_hours})
 
 @permission_required('auth.can_view', login_url='/forbidden')
 def change_org_admin(request, pk):
@@ -77,3 +86,21 @@ def change_org_admin(request, pk):
     if request.GET.get('next'):
         return HttpResponseRedirect(request.GET.get('next'))
     return HttpResponseRedirect(reverse('main:nhs_list'))
+
+@permission_required('auth.can_view', login_url='/forbidden')
+def demerit(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    if request.method == "POST":
+        if request.POST.get('reason'):
+            d = Demerit(user=user, reason=request.POST.get('reason'))
+            d.save()
+            site = Site.objects.get(pk=1)
+            plaintext = render_to_string('email/demerit.txt', {'reason': request.POST.get('reason'), 
+                'SCHOOL_NAME': dj_settings.SCHOOL_NAME, 'SCHOOL_SHORT_NAME': dj_settings.SCHOOL_SHORT_NAME})
+            html = render_to_string('email/demerit.html', {'reason': request.POST.get('reason'), 'site': site,
+                'SCHOOL_NAME': dj_settings.SCHOOL_NAME, 'SCHOOL_SHORT_NAME': dj_settings.SCHOOL_SHORT_NAME})
+            send_html_mail('You\'ve been demerited!', plaintext, html, dj_settings.DEFAULT_FROM_EMAIL, (user.email,))
+            messages.success(request, 'Demerit applied successfully')
+            return HttpResponseRedirect(reverse('main:nhs_user_report', args=(str(user.id))))
+        messages.error(request, 'Please enter a reason')
+    return render(request, 'main/nhs_demerit.html', {'user': user})

@@ -1,5 +1,4 @@
 from django.core.management.base import NoArgsCommand
-from django.db import connection
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.conf import settings

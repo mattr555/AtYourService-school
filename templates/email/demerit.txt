@@ -1,0 +1,10 @@
+Hello,
+
+The NHS administrator for {{SCHOOL_NAME}} has demerited you using AtYourService. Below is the reason:
+
+{{reason}}
+
+If you believe this to be in error, you can contact your administrator via email.
+
+Thanks,
+{{SCHOOL_SHORT_NAME}} AtYourService
