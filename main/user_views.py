@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
+from django.conf import settings
 
 import random
 import string
@@ -48,10 +49,15 @@ def signup(request):
             u.user_profile.email_validation_key = key
             u.user_profile.save()
             site = Site.objects.get_current()
-            send_mail('AtYourService Email Validation',
-                      render_to_string('email/validation.txt', {'validation_key': key, 'site': site}),
-                      'noreply@atyourservice.com',
-                      [u.email])
+            try:
+                send_mail('AtYourService Email Validation',
+                          render_to_string('email/validation.txt', {'validation_key': key, 'site': site}),
+                          'noreply@atyourservice.com',
+                          [u.email])
+            except:
+                u.user_profile.email_valid = True
+                u.user_profile.email_validation_key = ''
+                u.user_profile.save()
             return HttpResponseRedirect('/')
         return render(request, 'main/signup.html', {'errors': form.errors, 'timezones': pytz.common_timezones, 'form': form})
     elif request.user.is_authenticated():
