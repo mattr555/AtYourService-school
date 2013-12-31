@@ -104,3 +104,10 @@ def demerit(request, pk):
             return HttpResponseRedirect(reverse('main:nhs_user_report', args=(str(user.id))))
         messages.error(request, 'Please enter a reason')
     return render(request, 'main/nhs_demerit.html', {'user': user})
+
+@permission_required('auth.can_view', login_url='/forbidden')
+def delete_demerit(request, pk):
+    demerit = get_object_or_404(Demerit, pk=pk)
+    demerit.delete()
+    messages.info(request, 'Demerit successfully deleted')
+    return HttpResponseRedirect(reverse('main:nhs_user_report', args=(str(demerit.user_id))))

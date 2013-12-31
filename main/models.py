@@ -327,3 +327,4 @@ class SiteSettings(models.Model):
 class Demerit(models.Model):
     user = models.ForeignKey(User, related_name='demerits')
     reason = models.CharField(max_length=1000)
+    date = models.DateField(auto_now_add=True)

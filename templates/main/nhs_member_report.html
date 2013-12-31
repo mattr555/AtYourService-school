@@ -63,6 +63,13 @@
 	<br>
 	<div style="clear:both;">{{user.get_full_name}} is {%if not user.user_profile.is_org_admin%}not {%endif%}an organization admin. <a href="{%url 'main:change_org_admin' user.id%}?next=..">Change.</a></div>
 	<div style="clear:both;">{{user.get_full_name}} has {{user.user_profile.demerit_count}} demerit{{user.user_profile.demerit_count|pluralize}}.</div>
+	{%if user.user_profile.demerit_count%}
+		<ul>
+			{%for d in user.demerits.all%}
+				<li>{{d.date}}: {{d.reason}} <a href="{%url 'main:nhs_delete_demerit' d.id%}">(Delete)</a></li>
+			{%endfor%}
+		</ul>
+	{%endif%}
 	{%if user.user_profile.service_hours_last_month < srv_min %}
 		<div style="clear:both;">{{user.get_full_name}} did not do all of his/her required hours last month!</div>
 	{%endif%}
