@@ -4,9 +4,9 @@
 {%block title%}Track Events{%endblock%}
 
 {%block content%}
-<h2>Events participated by {{request.user.get_full_name}}</h2>
+<h2>Events participated in by {{request.user.get_full_name}}</h2>
 
-<a id='new-event-button' class='btn btn-success pull-right' href='#newEvent' data-toggle='modal' data-target='#newEvent' role='button'><i class="icon-plus"></i> Create New Event</a>
+<a id='new-event-button' class='btn btn-success pull-right' href='#newEvent' data-toggle='modal' data-target='#newEvent' role='button'><i class="fa fa-plus"></i> Create New Event</a>
 <div id='newEvent' class="modal fade">
 	<div class='modal-dialog'>
 		<div class='modal-content'>
@@ -15,14 +15,53 @@
 				<h3>New Event</h3>
 			</div>
 			<div class='modal-body'>
-				<form id='event-form' method='post'>
+				<form id="event-form" method="post">
 					{%csrf_token%}
-					{% for field in form %}
+					
 					<div class="form-group">
-						<label for="{{field.html_name}}-field">{{field.label}}</label>
-						<input type="text" class="form-control" id="{{field.html_name}}-field" name="{{field.html_name}}" {% if field.value%}value="{{field.value}}"{%endif%}>
+						<label for="name-field">Name</label>
+						<input type="text" class="form-control" id="name-field" name="name" {%if form.name.value%}value="{{form.name.value}}"{%endif%} required>
 					</div>
-					{%endfor%}
+
+					<div class="form-group">
+						<label for="org-field">Organization</label>
+						<input type="text" class="form-control" id="org-field" name="organization" {%if form.organization.value%}value="{{form.organization.value}}"{%endif%} required>
+					</div>
+					
+					<div class="form-group">
+						<label for="description-field">Description</label>
+						<textarea name="description" id="description-field" class="form-control" rows="3">{%if form.description.value%}{{form.description.value}}{%endif%}</textarea>
+					</div>
+					
+					<div class="form-group">
+						<label for="date_start-field">Date start</label>
+						<input type="text" class="form-control" id="date_start-field" name="date_start" placeholder="MM/DD/YY HH:MM AM/PM" {%if form.date_start.value%}value="{{form.date_start.value}}"{%endif%} required>
+					</div>
+					
+					<div class="form-group">
+						<label for="date_end-field">Date end</label>
+						<input type="text" class="form-control" id="date_end-field" name="date_end" placeholder="MM/DD/YY HH:MM AM/PM" {%if form.date_end.value%}value="{{form.date_end.value}}"{%endif%}>
+					</div>
+					
+					<div class="form-group">
+						<label for="location-field">Location</label>
+						<input type="text" class="form-control" id="location-field" name="location" {%if form.location.value%}value="{{form.location.value}}"{%endif%} required>
+					</div>
+					
+					<div class="form-group">
+						<label for="hours_worked-field">Hours worked</label>
+						<input type="text" class="form-control" id="hours_worked-field" name="hours_worked" {%if form.hours_worked.value%}value="{{form.hours_worked.value}}"{%endif%} required>
+					</div>
+					
+					<div class="form-group">
+						<label for="hour_type-field">Hour type</label>
+						<select name="hour_type" id="hour_type-field" class="form-control">
+							<option value="">-</option>
+							<option value="SRV" {%if form.hour_type.value == "SRV"%}selected{%endif%}>Service</option>
+							<option value="LED" {%if form.hour_type.value == "LED"%}selected{%endif%}>Leadership</option>
+						</select>
+					</div>
+					
 				</form>
 			</div>
 			<div class='modal-footer'>
@@ -54,7 +93,7 @@
 			{%else%}
 				<td>{{event.getOrganization}}</td>
 			{%endif%}
-			<td>{{event.hours}}</td>
+			<td>{{event.hours}} {{event.hour_type}}</td>
 			<td>{{event|args:request.user|call:"status"}}</td>
 		</tr>
 		{%endfor%}
@@ -64,8 +103,8 @@
 			<td></td>
 			<td></td>
 			<td></td>
-			<td><b>Total: </b>{{total_hours}}</td>
-			<th></th>
+			<td><b>Total: </b><a href="#" rel="tooltip" data-title="{{request.user.user_profile.service_hours}} SRV, {{request.user.user_profile.leadership_hours}} LED" data-placement="right">{{total_hours}}</a></td>
+			<td></td>
 		</tr>
 	</tfoot>
 </table>
@@ -82,6 +121,7 @@ $(document).ready(function(){
 	$('#date_start-field').attr('placeholder', 'MM/DD/YY HH:MM AM/PM')
 	$('#date_end-field').attr('placeholder', 'MM/DD/YY HH:MM AM/PM')
 
+	$('[rel="tooltip"]').tooltip()
 });
 </script>
 <script src='//cdn.jsdelivr.net/sorttable/2/sorttable.min.js'></script>

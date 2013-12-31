@@ -1,0 +1,99 @@
+{%extends 'main/base.html'%}
+{%load mytags%}
+
+{%block title%}Report for {{user.get_full_name}}{%endblock%}
+
+{% block content %}
+	<div class="pull-left"><h2>Report for {{user.get_full_name}}</h2></div>
+
+	{%if events%}
+	<div class="pull-right" style="padding-top:20px">
+		<b>Filter:</b>
+		<div class="btn-group">
+			<a class="btn btn-default" id="filter-all">All</a>
+			<a class="btn btn-default" id="filter-last-month">Last Month</a>
+		</div>
+	</div>
+	<table class='table table-hover sortable' id='eventlist'>
+		<thead>
+			<tr class='last-month'>
+				<th>Name</th>
+				<th>Date</th>
+				<th>Organization</th>
+				<th>Hours</th>
+				<th>Status</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{%for event in events%}
+			<tr class='{{ event|args:user|call:"row_class" }}'>
+				<td><a href="{{event.detail_url}}">{{event.name}}</a></td>
+				<td>{{event.date_start}}</td>
+				{% if event.has_org_url %}
+					<td><a href="{{event.organization.detail_url}}">{{event.getOrganization}}</a></td>
+				{%else%}
+					<td>{{event.getOrganization}}</td>
+				{%endif%}
+				<td class="hour-field">{{event.hours}}</td>
+				<td class="status-field">{{event|args:user|call:"status"}}</td>
+				{%if event.nhs_approved%}
+					<td><div class="btn-div"><button data-type="{% if event.has_org_url %}event{%else%}userevent{%endif%}" data-event-id="{{event.id}}" class="approve-button btn btn-xs btn-danger">Disapprove</button></div></td>
+				{%else%}
+					<td><div class="btn-div"><button data-type="{% if event.has_org_url %}event{%else%}userevent{%endif%}" data-event-id="{{event.id}}" class="approve-button btn btn-xs btn-success">Approve</button></div></td>
+				{%endif%}
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr class='last-month'>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><b>Total: </b><span id="total-hours">{{user.user_profile.service_hours}}</span>
+				<span id="total-hours-last-month" class="hidden">{{user.user_profile.service_hours_last_month}}</span></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tfoot>
+	</table>
+	{%else%}
+	<div style="clear:both;">No events found!</div>
+	{%endif%}
+	<br>
+	<div style="clear:both;">{{user.get_full_name}} is {%if not user.user_profile.is_org_admin%}not {%endif%}an organization admin. <a href="{%url 'main:change_org_admin' user.id%}?next=..">Change.</a></div>
+	<div style="clear:both;">{{user.get_full_name}} has {{user.user_profile.demerit_count}} demerit{{user.user_profile.demerit_count|pluralize}}.</div>
+	{%if user.user_profile.demerit_count%}
+		<ul>
+			{%for d in user.demerits.all%}
+				<li>{{d.date}}: {{d.reason}} <a href="{%url 'main:nhs_delete_demerit' d.id%}">(Delete)</a></li>
+			{%endfor%}
+		</ul>
+	{%endif%}
+	{%if user.user_profile.service_hours_last_month < srv_min %}
+		<div style="clear:both;">{{user.get_full_name}} did not do all of his/her required hours last month!</div>
+	{%endif%}
+	<a href="{%url 'main:nhs_demerit' user.id%}" class="btn btn-sm btn-danger">Demerit</a>
+	<span style="display:none" id="userid">{{user.id}}</span>
+{% endblock content %}
+
+{% block scripts %}
+	<script src="/static/js/approve_button_member.js"></script>
+	<script src='//cdn.jsdelivr.net/sorttable/2/sorttable.min.js'></script>
+	<script>
+	$(document).ready(function(){
+		$('#filter-all').on('click', function(){
+			$('tr').removeClass('hidden');
+			$('#total-hours').removeClass('hidden');
+			$('#total-hours-last-month').addClass('hidden');
+		})
+
+		$('#filter-last-month').on('click', function(){
+			$('tr').addClass('hidden');
+			$('.last-month').removeClass('hidden');
+			$('#total-hours').addClass('hidden');
+			$('#total-hours-last-month').removeClass('hidden');
+		})
+	})
+	</script>
+{% endblock scripts %}

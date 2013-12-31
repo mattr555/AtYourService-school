@@ -1,0 +1,32 @@
+{% extends "main/base.html" %}
+
+{% block title %}NHS Settings{% endblock title %}
+
+{% block content %}
+<h2>Change NHS Settings</h2>
+
+<form action="#" method="post" class="form-horizontal">
+	{%csrf_token%}
+	<div class="form-group">
+		<label for="candidate_service_hours-field" class="col-sm-6 control-label">Minimum Required Service Hours for Induction: </label>
+		<div class="col-sm-2">
+			<input type="text" name="candidate_service_hours" id="candidate_service_hours-field" {%if form.candidate_service_hours.value%}value="{{form.candidate_service_hours.value}}"{%endif%} class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="candidate_leadership_hours-field" class="col-sm-6 control-label">Minimum Required Leadership Hours for Induction: </label>
+		<div class="col-sm-2">
+			<input type="text" name="candidate_leadership_hours" id="candidate_leadership_hours-field" {%if form.candidate_leadership_hours.value%}value="{{form.candidate_leadership_hours.value}}"{%endif%} class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="member_service_hours-field" class="col-sm-6 control-label">Minimum Monthly Required Service Hours as a Member: </label>
+		<div class="col-sm-2">
+			<input type="text" name="member_service_hours" id="member_service_hours-field" {%if form.member_service_hours.value%}value="{{form.member_service_hours.value}}"{%endif%} class="form-control">
+		</div>
+	</div>
+	<div class="col-sm-offset-6 col-sm-2">
+		<input type="submit" class="btn btn-success" value="Save">
+	</div>
+</form>
+{% endblock content %}

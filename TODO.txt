@@ -2,6 +2,7 @@ What should happen before a 0.9 (closed beta) release:
 	Django admin page
 	No JOINS
 	Caching
+	Make more permanent changes POST, not GET
 
 What should happen before a 1.0 release:
 	Test suite
@@ -21,3 +22,11 @@ Done:
 		Adding events defined by organization
 		Confirmation of user attendance
 		Email validation
+	0.2.0:
+		NHS Admin page:
+			view reports of students
+			disapprove of bad events
+			demerits
+		Travis CI/Coveralls
+		Member vs. Candidate rules and tracking
+		Monthly rules

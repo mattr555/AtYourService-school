@@ -1,0 +1,19 @@
+language: python
+
+python:
+- 3.3
+
+env:
+- DJANGO_SETTINGS_MODULE="AtYourService.travis_settings"
+
+install:
+- pip install -r requirements.txt --use-mirrors
+- pip install coverage python_coveralls --use-mirrors
+
+before_script:
+- psql -U postgres -c 'CREATE DATABASE atyourservice;'
+
+script: coverage run manage.py test
+
+after_success:
+- coveralls

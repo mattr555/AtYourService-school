@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
+from django.contrib.sites.models import Site
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 
@@ -9,6 +10,11 @@ from math import sin, cos, acos, radians
 import datetime
 
 ConfirmTuple = namedtuple('ConfirmTuple', 'status row_class button_class button_text')
+
+HOUR_TYPES = (
+    ('SRV', 'Service'),
+    ('LED', 'Leadership')
+)
 
 def haversin(p1_lat, p1_long, p2_lat, p2_long):
         # calculates the distance between p1 and p2
@@ -36,7 +42,7 @@ class Organization(models.Model):
             place, (lat, lon) = geo.geocode(self.location)
             self.geo_lat = lat
             self.geo_lon = lon
-        except:
+        except: # pragma: no cover
             pass
 
     def member_count(self):
@@ -78,6 +84,11 @@ class Event(models.Model):
         return self.name
 
     def hours(self):
+        if not self.nhs_approved:
+            return 0
+        return self.hours_approved()
+
+    def hours_approved(self):
         delta = self.date_end - self.date_start
         return round((delta.seconds / 60 / 60) + (delta.days * 24), 2)
 
@@ -85,6 +96,8 @@ class Event(models.Model):
         return reverse('main:event_detail', args=(self.pk,))
 
     def status(self, user):
+        if not self.nhs_approved:
+            return "Not approved by NHS"
         if user == self.organizer:
             return "Organizing"
         if user in self.participants.all():
@@ -98,6 +111,7 @@ class Event(models.Model):
 
     def confirm_status(self, user):
         ROW_CLASSES = {"Unconfirmed": "warning",
+                       "Not approved by NHS": "danger",
                        "Confirmed": "success"}
         BUTTON_CLASSES = {"Unconfirmed": "btn-success",
                           "Confirmed": "btn-warning"}
@@ -111,8 +125,12 @@ class Event(models.Model):
 
     def row_class(self, user):
         ROW_CLASSES = {"Unconfirmed": "warning",
+                       "Not approved by NHS": "danger",
                        "Confirmed": "success"}
-        return ROW_CLASSES.get(self.status(user), "")
+        status = ROW_CLASSES.get(self.status(user), "")
+        if self.from_last_month():
+            return status + ' last-month'
+        return status
 
     def getOrganization(self):
         return self.organization.name
@@ -123,7 +141,7 @@ class Event(models.Model):
             place, (lat, lon) = geo.geocode(self.location)
             self.geo_lat = lat
             self.geo_lon = lon
-        except:
+        except: # pragma: no cover
             pass
 
     def participant_count(self):
@@ -134,6 +152,13 @@ class Event(models.Model):
 
     def date_end_input(self):
         return datetime.datetime.strftime(self.date_end, '%m/%d/%y %I:%M %p')
+
+    def from_last_month(self):
+        last_month_end = timezone.make_aware(timezone.datetime(timezone.now().year, timezone.now().month, 1)
+            - timezone.timedelta(seconds=1), self.date_start.tzinfo)
+        last_month_start = timezone.make_aware(timezone.datetime(last_month_end.year, last_month_end.month, 1), 
+            self.date_start.tzinfo)
+        return self.date_start >= last_month_start and self.date_start < last_month_end
 
     has_org_url = True
     objects = EventManager()
@@ -149,18 +174,27 @@ class Event(models.Model):
     location = models.CharField(max_length=100)
     geo_lat = models.FloatField(blank=True, null=True)
     geo_lon = models.FloatField(blank=True, null=True)
+    hour_type = models.CharField(max_length=3, choices=HOUR_TYPES)
+    nhs_approved = models.BooleanField(default=True)
 
 class UserEvent(models.Model):
     def __str__(self):
         return self.name
 
     def hours(self):
+        if not self.nhs_approved:
+            return 0
+        return self.hours_approved()
+
+    def hours_approved(self):
         return self.hours_worked
 
     def detail_url(self):
         return reverse('main:userevent_detail', args=(self.pk,))
 
     def status(self, user):
+        if not self.nhs_approved:
+            return "Not approved by NHS"
         if user == self.user:
             if timezone.now() < self.date_start:
                 return "Event has not occurred yet"
@@ -168,7 +202,12 @@ class UserEvent(models.Model):
         return "Not participating"
 
     def row_class(self, user):
-        return "success" if self.status(user) == "User-created Event" else ""
+        ROW_CLASSES = {"Not approved by NHS": "danger",
+                       "User-created Event": "success"}
+        status = ROW_CLASSES.get(self.status(user), "")
+        if self.from_last_month():
+            return status + ' last-month'
+        return status
 
     def getOrganization(self):
         return self.organization
@@ -179,8 +218,15 @@ class UserEvent(models.Model):
             place, (lat, lon) = geo.geocode(self.location)
             self.geo_lat = lat
             self.geo_lon = lon
-        except:
+        except: # pragma: no cover
             pass
+
+    def from_last_month(self):
+        last_month_end = timezone.make_aware(timezone.datetime(timezone.now().year, timezone.now().month, 1)
+            - timezone.timedelta(seconds=1), self.date_start.tzinfo)
+        last_month_start = timezone.make_aware(timezone.datetime(last_month_end.year, last_month_end.month, 1), 
+            self.date_start.tzinfo)
+        return self.date_start >= last_month_start and self.date_start < last_month_end
 
     has_org_url = False
     user = models.ForeignKey(User, related_name='user_events')
@@ -193,6 +239,8 @@ class UserEvent(models.Model):
     geo_lat = models.FloatField(blank=True, null=True)
     geo_lon = models.FloatField(blank=True, null=True)
     hours_worked = models.FloatField('hours worked')
+    hour_type = models.CharField(max_length=3, choices=HOUR_TYPES)
+    nhs_approved = models.BooleanField(default=True)
 
 class UserProfile(models.Model):
     def __str__(self):
@@ -204,14 +252,61 @@ class UserProfile(models.Model):
             place, (lat, lon) = geo.geocode(self.location)
             self.geo_lat = lat
             self.geo_lon = lon
-        except:
+        except: # pragma: no cover
             pass
 
-    def is_org_admin(self):
-        return self.user.groups.filter(name="Org_Admin").count() > 0
+    def is_nhs_admin(self):
+        return self.user.has_perm('auth.can_view')
 
+    def is_org_admin(self):
+        return self.user.has_perm('main.add_organization')
+        
     def is_volunteer(self):
-        return self.user.groups.filter(name="Volunteer").count() > 0
+        return self.user.has_perm('main.add_userevent')
+
+    def hours_filtered(self, filter, last_month=False):
+        #slow af function
+        count = 0
+        if not last_month:
+            for i in self.user.events.filter(hour_type=filter):
+                count += i.hours()
+            for i in self.user.user_events.filter(hour_type=filter):
+                count += i.hours()
+        else:
+            last_month_end = timezone.datetime(timezone.now().year, timezone.now().month, 1) - timezone.timedelta(seconds=1)
+            last_month_start = timezone.datetime(last_month_end.year, last_month_end.month, 1)
+            for i in self.user.events.filter(hour_type=filter,
+                date_start__gte=last_month_start,
+                date_start__lte=last_month_end):
+                count += i.hours()
+            for i in self.user.user_events.filter(hour_type=filter,
+                date_start__gte=last_month_start,
+                date_start__lte=last_month_end):
+                count += i.hours()
+        """
+        from django.db.models import Sum
+        userevent_count = self.user.user_events.filter(hour_type=filter).aggregate(Sum('hours_worked'))['hours_worked__sum']
+        if userevent_count:
+            count += userevent_count
+        """
+        return count
+
+    def service_hours(self):
+        return self.hours_filtered('SRV')
+
+    def service_hours_last_month(self):
+        return self.hours_filtered('SRV', True)
+
+    def leadership_hours(self):
+        return self.hours_filtered('LED')
+
+    def demerit_count(self):
+        return self.user.demerits.count()
+
+    MEMBER_STATUSES = (
+        ('CAN', 'Candidate'),
+        ('MEM', 'Member')
+    )
 
     user = models.OneToOneField(User, unique=True, related_name='user_profile')
     geo_lat = models.FloatField(blank=True, null=True)
@@ -220,3 +315,16 @@ class UserProfile(models.Model):
     timezone = models.CharField(max_length=100, blank=True)
     email_valid = models.BooleanField(default=False)
     email_validation_key = models.CharField(max_length=50, blank=True)
+    grad_class = models.IntegerField()
+    membership_status = models.CharField(max_length=3, choices=MEMBER_STATUSES)
+
+class SiteSettings(models.Model):
+    site = models.OneToOneField(Site, related_name='settings')
+    candidate_service_hours = models.IntegerField()
+    candidate_leadership_hours = models.IntegerField()
+    member_service_hours = models.IntegerField()
+
+class Demerit(models.Model):
+    user = models.ForeignKey(User, related_name='demerits')
+    reason = models.CharField(max_length=1000)
+    date = models.DateField(auto_now_add=True)

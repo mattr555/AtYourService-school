@@ -47,3 +47,5 @@ dev_settings.py
 
 *.sublime-project
 *.sublime-workspace
+ajax/
+htmlcov/

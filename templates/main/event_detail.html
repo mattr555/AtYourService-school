@@ -9,10 +9,10 @@
 		<h2>{{event.name}}</h2>
 		<h4><a href="{{event.organization.detail_url}}">{{event.organization}}</a></h4>
 		{{event.date_start}} to {{event.date_end}}<br/>
-		<b>Hours: </b>{{event.hours}}<br/>
+		<b>Hours: </b><span id="hours">{{event.hours}} {{event.hour_type}}</span><br/>
 		<b>Organized by: </b>{{event.organizer.get_full_name}}<br/>
 		<b>Description: </b>{{event.description}}<br/>
-		<b>User Status: </b><span class='{% if event|args:request.user|call:"status" == "User-created Event" or event|args:request.user|call:"status" == "Confirmed"%}text-success{%elif event|args:request.user|call:"status" == "Unconfirmed"%}text-warning{%endif%}' id='user-status'>{{event|args:request.user|call:"status"}}</span>
+		<b>User Status: </b><span class='text-{{event|args:request.user|call:"row_class"}}' id='user-status'>{{event|args:request.user|call:"status"}}</span>
 		<hr/>
 		<b>Location: </b>{{event.location}}<br/>
 		{%if event.geo_lat%}
@@ -25,6 +25,16 @@
 		<a href="{%url 'main:event_home' event.id%}">Edit</a>
 		{% elif request.user in event.participants.all %}
 		<a class='btn btn-success commit-button center commit-disabled disabled' data-id={{event.id}}>Participating</a>
+		{%elif request.user.user_profile.is_nhs_admin%}
+			{%if event.nhs_approved%}
+			<div class='button-div' class='col-lg-2'>
+				<button data-event-id="{{event.id}}" data-type="event" class='approve-button btn btn-danger'>Disapprove</button>
+			</div>
+			{%else%}
+			<div class='button-div' class='col-lg-2'>
+				<button data-event-id="{{event.id}}" data-type="event" class='approve-button btn btn-success'>Approve</button>
+			</div>
+			{%endif%}
 		{%else%}
 		<a class='btn btn-primary commit-button center commit-active' data-id={{event.id}}>Do this event!</a>
 		{%endif%}
@@ -61,4 +71,5 @@ $(document).ready(function(){
 })
 </script>
 <script src='/static/js/event_button.js'></script>
+<script src="/static/js/approve_detail_button.js"></script>
 {%endblock%}

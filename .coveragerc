@@ -1,0 +1,11 @@
+[run]
+source = AtYourService,main
+
+[report]
+omit =
+    */python?.?/*
+    */site-packages/*
+    */migrations/*
+exclude_lines =
+	pass$
+	pragma: no cover

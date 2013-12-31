@@ -1,6 +1,6 @@
 {%extends 'main/base.html'%}
 
-{%block title%}Event details for {{event.name}}{%endblock%}
+{%block title%}Event details for {{userevent.name}}{%endblock%}
 
 {%block content%}
 <div class='row-fluid'>
@@ -9,7 +9,7 @@
 		<h4>{{userevent.organization}}</h4>
 		{{userevent.date_start}} to {{userevent.date_end}}<br/>
 		User created event by {{userevent.user.get_full_name}}<br/>
-		<b>Hours: </b>{{userevent.hours}}<br/>
+		<b>Hours: </b><span id="hours">{{userevent.hours}} {{userevent.hour_type}}</span><br/>
 		<b>Description: </b>{{userevent.description}}
 		<hr/>
 		<b>Location: </b>{{userevent.location}}<br/>
@@ -17,9 +17,21 @@
 		<div id="map"></div>
 		{%endif%}
 	</div>
-	<div class='button-div' class='col-lg-2'>
-		<a id='delete-button' class='btn btn-danger'>Delete</a>
-	</div>
+	{% if request.user == userevent.user %}
+		<div class='button-div' class='col-lg-2'>
+			<a id='delete-button' class='btn btn-danger'>Delete</a>
+		</div>
+	{%elif request.user.user_profile.is_nhs_admin%}
+		{%if userevent.nhs_approved%}
+		<div class='button-div' class='col-lg-2'>
+			<a data-event-id="{{userevent.id}}" data-type="userevent" class='approve-button btn btn-danger'>Disapprove</a>
+		</div>
+		{%else%}
+		<div class='button-div' class='col-lg-2'>
+			<a data-event-id="{{userevent.id}}" data-type="userevent" class='approve-button btn btn-danger'>Disapprove</a>
+		</div>
+		{%endif%}
+	{%endif%}
 </div>
 {%endblock%}
 
@@ -56,5 +68,5 @@ $(document).ready(function(){
 	})
 })
 </script>
-
+<script src="/static/js/approve_detail_button.js"></script>
 {%endblock%}

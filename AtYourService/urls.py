@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
+from django.conf import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -16,7 +17,6 @@ urlpatterns = patterns('',
     url(r'^real_admin/', include(admin.site.urls)),
     url(r'^admin/', TemplateView.as_view(template_name='admin.html')),
     url(r'^humans\.txt$', TemplateView.as_view(template_name='humans.txt', content_type='text/plain')),
-    url(r'^ajax/', include('ajax.urls')),
 
     url(r'^profile/reset_pass/$',
         'django.contrib.auth.views.password_reset',
@@ -38,4 +38,10 @@ urlpatterns = patterns('',
 
     url(r'^', include('main.urls', namespace='main')),
 )
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )
 

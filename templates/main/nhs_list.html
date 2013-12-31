@@ -1,0 +1,61 @@
+{% extends "main/base.html" %}
+
+{% block title %}List Students{% endblock title %}
+
+{% block content %}
+	<div><h2>List {{student_type}}</h2></div>
+	{% if students %}
+	<table class="table table-hover sortable">
+		<thead>
+			<tr>
+				<th>Name</th>
+				{% if student_type == "Candidates" %}<th>Leadership Hours</th>{%endif%}
+				<th>Service Hours{%if student_type == "Members"%} Last Month{%endif%}</th>
+				{% if student_type == "Members" %}<th>Demerits</th>{%endif%}
+				<th>Class</th>
+				<th>Organization Admin?</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for s in students %}
+				<tr class='student-row'>
+					<td><a href="{%url 'main:nhs_user_report' s.id%}">{{s.get_full_name}}</a></td>
+					{% if student_type == "Candidates" %}
+						<td class='led-hr'>{{s.user_profile.leadership_hours}}</td>
+						<td class='srv-hr'>{{s.user_profile.service_hours}}</td>
+					{%else%}
+						<td class='srv-hr'>{{s.user_profile.service_hours_last_month}}</td>
+						<td>{{s.user_profile.demerit_count}}</td>
+					{%endif%}
+					<td>{{s.user_profile.grad_class}}</td>
+					<td>{%if s.user_profile.is_org_admin%}Yes{%else%}No{%endif%} <a href="{%url 'main:change_org_admin' s.id%}">(Change)</a></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{%else%}
+	<br>No students found :/
+	{% endif %}
+{% endblock content %}
+
+{% block scripts %}
+	<style>
+		tr.hidden {display:none;}
+	</style>
+	<script src='//cdn.jsdelivr.net/sorttable/2/sorttable.min.js'></script>
+	<script>
+	$(document).ready(function(){
+		$('.student-row').filter(function(){
+			if ("{{student_type}}" == "Candidates"){
+				return parseFloat($(this).children('.led-hr').text()) >= {{led_can_min}} && parseFloat($(this).children('.srv-hr').text()) >= {{srv_can_min}}
+			} else if ("{{student_type}}" == "Members"){
+				return parseFloat($(this).children('.srv-hr').text()) >= {{srv_mem_min}}
+			}			
+		}).addClass('success')
+
+		if ("{{student_type}}" == "Members"){
+			$('.student-row:not(.success)').addClass('danger')
+		}
+	})
+	</script>
+{% endblock scripts %}

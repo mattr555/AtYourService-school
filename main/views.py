@@ -91,7 +91,7 @@ def organization_detail(request, pk):
 @login_required
 def userevent_detail(request, pk):
     e = get_object_or_404(UserEvent.objects, pk=pk)
-    if request.user.id == e.user_id:
+    if request.user.id == e.user_id or request.user.has_perm('auth.can_view'):
         return render(request, 'main/userevent_detail.html', {'userevent': e})
     messages.error(request, "That's not your event!")
     return HttpResponseRedirect('/')
@@ -134,3 +134,8 @@ def track_events(request):
     return render(request, 'main/track_events.html', {'events': event_set,
                                                       'total_hours': total_hours,
                                                       'form': form})
+
+def forbidden(request):
+    """easy way to say that the user is not authorized"""
+    messages.error(request, 'You aren\'t authorized to do that!')
+    return HttpResponseRedirect('/')

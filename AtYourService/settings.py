@@ -7,14 +7,10 @@ import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-if DEBUG:
-    from AtYourService.dev_settings import *
 
 from django.contrib import messages
+from django.conf import global_settings
 
-# Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -105,20 +101,12 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'south',
     'main',
-    'ajax',
 )
 
 EMAIL_SUBJECT_PREFIX = '[AtYourService] '
 
-TEMPLATE_CONTEXT_PROCESSORS = ('django.contrib.auth.context_processors.auth',
-                               'django.core.context_processors.debug',
-                               'django.core.context_processors.i18n',
-                               'django.core.context_processors.media',
-                               'django.core.context_processors.static',
-                               'django.core.context_processors.tz',
-                               'django.contrib.messages.context_processors.messages',
-                               'django.core.context_processors.request'
-)
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + ('django.core.context_processors.request',
+                               'main.context_processors.school_name',)
 
 LOGIN_URL = '/login/'
 
@@ -128,7 +116,12 @@ MESSAGE_TAGS = {messages.ERROR: 'alert-danger',
 
 SITE_ID = 1
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+# SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
-from django.conf import global_settings
 DATETIME_INPUT_FORMATS = global_settings.DATETIME_INPUT_FORMATS + ('%m/%d/%y %I:%M %p', '%m/%d/%Y %I:%M %p')
+
+if DEBUG:
+    try:
+        from AtYourService.dev_settings import *
+    except:
+        pass

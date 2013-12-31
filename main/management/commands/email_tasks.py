@@ -1,5 +1,4 @@
 from django.core.management.base import NoArgsCommand
-from django.db import connection
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.conf import settings
@@ -27,7 +26,7 @@ class Command(NoArgsCommand):
             plaintext = render_to_string('email/event_remind.txt', {'site': site, 'event': i})
             html = render_to_string('email/event_remind.html', {'site': site, 'event': i})
             recipients = list(map(lambda x: x.email, i.participants.filter(user_profile__email_valid=True)))
-            send_html_mail('Event reminder for {}'.format(i.name),
+            send_html_mail('[AtYourService] Event reminder for {}'.format(i.name),
                            plaintext,
                            html,
                            settings.DEFAULT_FROM_EMAIL,
