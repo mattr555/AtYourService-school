@@ -1,7 +1,3 @@
-What should happen before a 0.2 release:
-	Member vs. Candidate rules and tracking
-	Monthly rules
-
 What should happen before a 0.9 (closed beta) release:
 	Django admin page
 	No JOINS
@@ -32,3 +28,5 @@ Done:
 			disapprove of bad events
 			demerits
 		Travis CI/Coveralls
+		Member vs. Candidate rules and tracking
+		Monthly rules

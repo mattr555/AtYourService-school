@@ -54,6 +54,9 @@ def signup(request):
                       [u.email])
             return HttpResponseRedirect('/')
         return render(request, 'main/signup.html', {'errors': form.errors, 'timezones': pytz.common_timezones, 'form': form})
+    elif request.user.is_authenticated():
+        messages.error(request, 'You are already logged in')
+        return HttpResponseRedirect(request.GET.get('next', '/'))
     form = MyUserCreate()
     return render(request, 'main/signup.html', {'timezones': pytz.common_timezones, 'form': form})
 
