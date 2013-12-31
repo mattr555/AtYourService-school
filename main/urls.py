@@ -32,6 +32,7 @@ urlpatterns = patterns('',
     url(r'^nhs/user/(?P<pk>\d+)/org_admin/$', nhs_views.change_org_admin, name='change_org_admin'),
     url(r'^nhs/user/(?P<pk>\d+)/demerit/$', nhs_views.demerit, name='nhs_demerit'),
     url(r'^nhs/demerit/(?P<pk>\d+)/delete/$', nhs_views.delete_demerit, name='nhs_delete_demerit'),
+    url(r'^nhs/user/(?P<pk>\d+)/induct/$', nhs_views.induct, name='nhs_induct'),
 
     url(r'^forbidden/$', views.forbidden),
 

@@ -101,7 +101,7 @@ def demerit(request, pk):
                 'SCHOOL_NAME': dj_settings.SCHOOL_NAME, 'SCHOOL_SHORT_NAME': dj_settings.SCHOOL_SHORT_NAME})
             html = render_to_string('email/demerit.html', {'reason': request.POST.get('reason'), 'site': site,
                 'SCHOOL_NAME': dj_settings.SCHOOL_NAME, 'SCHOOL_SHORT_NAME': dj_settings.SCHOOL_SHORT_NAME})
-            send_html_mail('You\'ve been demerited!', plaintext, html, dj_settings.DEFAULT_FROM_EMAIL, (user.email,))
+            send_html_mail('[AtYourService] You\'ve been demerited!', plaintext, html, dj_settings.DEFAULT_FROM_EMAIL, (user.email,))
             messages.success(request, 'Demerit applied successfully')
             return HttpResponseRedirect(reverse('main:nhs_user_report', args=(str(user.id))))
         messages.error(request, 'Please enter a reason')
@@ -113,3 +113,11 @@ def delete_demerit(request, pk):
     demerit.delete()
     messages.info(request, 'Demerit successfully deleted')
     return HttpResponseRedirect(reverse('main:nhs_user_report', args=(str(demerit.user_id))))
+
+@permission_required('auth.can_view', login_url='/forbidden')
+def induct(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user.user_profile.membership_status = 'MEM'
+    user.user_profile.save()
+    messages.success(request, 'User successfully promoted to member')
+    return HttpResponseRedirect(reverse('main:nhs_user_report', args=(str(user.id))))

@@ -55,7 +55,7 @@
 	<br>
 	{{user.get_full_name}} is {%if not user.user_profile.is_org_admin%}not {%endif%}an organization admin. <a href="{%url 'main:change_org_admin' user.id%}?next=..">Change.</a><br>
 	{%if user.user_profile.leadership_hours >= led_min and user.user_profile.service_hours >= srv_min %}
-		{{user.get_full_name}} has completed their required leadership and service hours for induction. <br><a href="" class="btn btn-success">Induct</a>
+		{{user.get_full_name}} has completed their required leadership and service hours for induction. <br><a id="induct-btn" class="btn btn-success">Induct</a>
 	{%else%}
 		{{user.get_full_name}} has not completed their required leadership and service hours for induction.
 	{%endif%}
@@ -65,4 +65,14 @@
 {% block scripts %}
 	<script src="/static/js/approve_button.js"></script>
 	<script src='//cdn.jsdelivr.net/sorttable/2/sorttable.min.js'></script>
+	<script>
+	$(document).ready(function(){
+		$('#induct-btn').on('click', function(){
+			sure = confirm('Are you sure you want to do induct this user? This button should only be pressed when the user is actually inducted.');
+			if (sure){
+				window.location = "{% url 'main:nhs_induct' user.id %}";
+			}
+		})
+	})
+	</script>
 {% endblock scripts %}
