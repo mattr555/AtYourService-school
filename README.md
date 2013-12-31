@@ -48,3 +48,14 @@ Initial release. Corresponds with AtYourService v0.1.0
 * +Organization manipulation and administration
 * +Confirmation of user attendance
 * +Email verification
+
+v0.2.0
+------
+
+* +NHS Admin page:
+	* view reports of students
+	* disapprove of bad events
+	* demerits
+* +Travis CI/Coveralls
+* +Member vs. Candidate rules and tracking
+* +Monthly rules for members
