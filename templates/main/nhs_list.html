@@ -45,6 +45,8 @@
 	<script src='//cdn.jsdelivr.net/sorttable/2/sorttable.min.js'></script>
 	<script>
 	$(document).ready(function(){
+		$('#nhs-link').parent().addClass('active');
+		
 		$('.student-row').filter(function(){
 			if ("{{student_type}}" == "Candidates"){
 				return parseFloat($(this).children('.led-hr').text()) >= {{led_can_min}} && parseFloat($(this).children('.srv-hr').text()) >= {{srv_can_min}}

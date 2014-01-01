@@ -37,6 +37,9 @@
 						{% if request.user|is_org_admin %}
 							<li><a id="admin-link" href="{%url 'main:manage_home'%}">Manage Organizations</a></li>
 						{%endif%}
+						{% if request.user|is_nhs_admin %}
+							<li><a id="nhs-link" href="{%url 'main:nhs_home'%}">NHS Admin</a></li>
+						{%endif%}
 					</ul>
 				</nav>
 				{%if request.user.id%}

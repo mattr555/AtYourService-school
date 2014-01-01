@@ -11,3 +11,11 @@
 		<li><a href="{%url 'main:nhs_settings'%}">Change configuration</a></li>
 	</ul>
 {% endblock content %}
+
+{% block scripts %}
+	<script>
+	$(document).ready(function(){
+		$('#nhs-link').parent().addClass('active');
+	})
+	</script>
+{% endblock scripts %}

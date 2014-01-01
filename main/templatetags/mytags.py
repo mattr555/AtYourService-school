@@ -74,5 +74,9 @@ def is_volunteer(u):
     return u.has_perm('main.add_userevent')
 
 @register.filter
+def is_nhs_admin(u):
+    return u.has_perm('auth.can_view')
+
+@register.filter
 def date_value(date):
     return date.strftime('%m/%d/%Y %I:%M %p')

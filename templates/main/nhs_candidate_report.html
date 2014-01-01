@@ -73,6 +73,8 @@
 				window.location = "{% url 'main:nhs_induct' user.id %}";
 			}
 		})
+
+		$('#nhs-link').parent().addClass('active');
 	})
 	</script>
 {% endblock scripts %}
