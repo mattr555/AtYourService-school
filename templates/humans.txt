@@ -36,4 +36,5 @@
 	Language: English
 	Standards: HTML5, CSS3
 	Doctype: HTML5
-	Software: Eclipse + PyDev, Sublime Text 3
+	Software: Sublime Text 3
+	GitHub: github.com/mattr555/AtYourService-school

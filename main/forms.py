@@ -124,3 +124,8 @@ class NHSSettingsModify(forms.ModelForm):
         if commit:
             settings.save()
         return settings
+
+class SocialUserProf(forms.Form):
+    timezone = forms.ChoiceField(choices=[(i, i) for i in pytz.common_timezones])
+    grad_class = forms.IntegerField()
+    member_status = forms.ChoiceField(choices=[('MEM', 'NHS Member'), ('CAN', 'NHS Candidate')])

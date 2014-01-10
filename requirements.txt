@@ -5,3 +5,4 @@ geopy
 python3-memcached
 psycopg2
 decorator
+python-social-auth

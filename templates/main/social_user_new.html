@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Login</title>
+		<title>New User</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="description" content="">
 		<meta name="author" href="/humans.txt">
@@ -60,13 +60,42 @@
 			
 			<form class="form-signin" action="" method="post">
 				{%csrf_token%}
-				Hey! <a href='{%url "social:begin" "google-oauth2"%}'>Login with Google</a>
-				<h2 class="form-signin-heading">Please login</h2>
-				<input type="text" class="input-block-level form-control" placeholder="Username" style="background-image: none; background-position: 0% 0%; background-repeat: repeat repeat;" name="uname" id="uname">
-				<input type="password" class="input-block-level form-control" placeholder="Password" name="pword" id="pword">
-				<button class="btn btn-large btn-primary" type="submit">Login</button><br>
-				<a href="{%url 'reset_password'%}">Forgot password?</a><br>
-				<a href="{%url 'main:signup'%}">Signup</a>
+				<h2>Hi.</h2>
+				There are just a few things left to set up.
+				<div class="form-group">
+					<label for="timezone-field">Timezone</label>
+					<select name="timezone" id="timezone-field" class="form-control input-block-level">
+						<option value="">-</option>
+						<option value="America/New_York">America/New_York (Eastern)</option>
+						<option value="America/Chicago">America/Chicago (Central)</option>
+						<option value="America/Denver">America/Denver (Mountain)</option>
+						<option value="America/Los_Angeles">America/Los_Angeles (Pacific)</option>
+						<option value="">------------</option>
+						{% for tz in timezones %}
+							<option value="{{tz}}">{{tz}}</option>
+						{% endfor %}
+					</select>
+					<span class="help-block" id="password-help"></span>
+				</div>
+				<div class="form-group">
+					<label for="class-field">Graduating Class</label>
+					<select name="grad_class" id="class-field" class="form-control input-block-level">
+						<option value="">-</option>
+						<option value="2014">2014</option>
+						<option value="2015">2015</option>
+						<option value="2016">2016</option>
+						<option value="2017">2017</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="status-field">I am a...</label>
+					<select name="member_status" id="status-field" class="form-control input-block-level">
+						<option value="">-</option>
+						<option value="CAN">NHS Candidate</option>
+						<option value="MEM">NHS Member</option>
+					</select>
+				</div>
+				<button class="btn btn-lg btn-primary" type="submit">Save</button>
 			</form>
 
 		</div> <!-- /container -->
@@ -76,10 +105,4 @@
 		<!-- Placed at the end of the document so the pages load faster -->
 		<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-		<script>
-			$(document).ready(function(){
-				$('.alert').alert();
-			})
-		</script>
-
 </body></html>
