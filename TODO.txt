@@ -30,3 +30,5 @@ Done:
 		Travis CI/Coveralls
 		Member vs. Candidate rules and tracking
 		Monthly rules
+	0.3.0:
+		Login with Google
