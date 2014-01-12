@@ -35,6 +35,8 @@ personal_settings.py
 * `MANAGERS`
 * `SCHOOL_NAME`
 * `SCHOOL_NAME_SHORT`
+* `SOCIAL_AUTH_GOOGLE_OAUTH2_KEY`
+* `SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET`
 
 Changelog
 =========
