@@ -16,7 +16,10 @@ from main.forms import NHSSettingsModify
 def send_html_mail(subject, plaintext, html, from_address, recipients):
     msg = EmailMultiAlternatives(subject, plaintext, from_address, recipients)
     msg.attach_alternative(html, 'text/html')
-    msg.send()
+    try:
+        msg.send()
+    except:
+        pass
 
 @login_required
 def nhs_home(request):

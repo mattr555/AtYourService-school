@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Sign Up</title>
+		<title>New User</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="description" content="">
 		<meta name="author" href="/humans.txt">
@@ -16,7 +16,7 @@
 			}
 
 			.form-signin {
-				max-width: 400px;
+				max-width: 300px;
 				padding: 19px 29px 29px;
 				margin: 0 auto 20px;
 				background-color: #fff;
@@ -32,17 +32,16 @@
 			.form-signin .checkbox {
 				margin-bottom: 10px;
 			}
-			/*.form-signin input[type="text"],
+			.form-signin input[type="text"],
 			.form-signin input[type="password"] {
 				font-size: 16px;
 				height: auto;
 				margin-bottom: 15px;
 				padding: 7px 9px;
-			}*/
+			}
 
 		</style>
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
-		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
 	<style type="text/css"></style>
 	</head>
@@ -51,46 +50,18 @@
 
 		<div class="container">
 
-			{% if errors %}
-			<div class="alert alert-danger fade in">
+			{% if error_message %}
+			<div class="alert alert-danger">
 				<a class="close" data-dismiss="alert" href="#">&times;</a>
 				<h4 class="alert-heading">Oh Noes!</h4>
-				<ul>
-				{% for field, error in errors.items %}
-					<li><b>{{field}}</b>- {{error}}</li>
-				{% endfor %}
-				</ul>
+				<p>{{error_message}}</p>
 			</div>
 			{%endif%}
-
+			
 			<form class="form-signin" action="" method="post">
-				Hey! <a href='{%url "social:begin" "google-oauth2"%}' id="google-login" class="btn btn-sm btn-danger"><i class="fa fa-google-plus"></i> Login with Google</a>
 				{%csrf_token%}
-				<h2 class="form-signin-heading">Please sign up</h2>
-				<div class="form-group">
-					<input type="text" class="input-block-level form-control" placeholder="Username" name="username" {% if form.username.value %}value="{{form.username.value}}"{% endif %} required>
-					<span class="help-block" id="username-help"></span>
-				</div>
-				<div class="form-group">
-					<input type="password" class="input-block-level form-control" placeholder="Password" name="password1" required>
-					<span class="help-block"></span>
-				</div>
-				<div class="form-group">
-					<input type="password" class="input-block-level form-control" placeholder="Confirm password" name="password2" required>
-					<span class="help-block" id="password-help"></span>
-				</div>
-				<div class="form-group">
-					<input type="text" class="input-block-level form-control" placeholder="First name" name="first_name" {% if form.first_name.value %}value="{{form.first_name.value}}"{%endif%} required>
-					<span class="help-block" id="password-help"></span>
-				</div>
-				<div class="form-group">
-					<input type="text" class="input-block-level form-control" placeholder="Last name" name="last_name" {% if form.last_name.value %}value="{{form.last_name.value}}"{%endif%} required>
-					<span class="help-block" id="password-help"></span>
-				</div>
-				<div class="form-group">
-					<input type="email" class="input-block-level form-control" placeholder="Email" name="email" {% if form.email.value %}value="{{form.email.value}}"{%endif%} required>
-					<span class="help-block" id="password-help"></span>
-				</div>
+				<h2>Hi.</h2>
+				There are just a few things left to set up.
 				<div class="form-group">
 					<label for="timezone-field">Timezone</label>
 					<select name="timezone" id="timezone-field" class="form-control input-block-level">
@@ -124,11 +95,7 @@
 						<option value="MEM">NHS Member</option>
 					</select>
 				</div>
-				<label>
-					reCAPTCHA
-					<img src='http://placekitten.com/300/100'/>
-				</label>
-				<button class="btn btn-large btn-primary" type="submit">Sign up</button>
+				<button class="btn btn-lg btn-primary" type="submit">Save</button>
 			</form>
 
 		</div> <!-- /container -->
@@ -138,11 +105,4 @@
 		<!-- Placed at the end of the document so the pages load faster -->
 		<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-		<script>
-			$(document).ready(function(){
-				$('.alert').alert();
-			})
-		</script>
-		<script src="/static/js/AjaxCSRF.js"></script>
-		<script src="/static/js/signup_validation.js"></script>
 </body></html>

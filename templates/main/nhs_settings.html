@@ -30,3 +30,11 @@
 	</div>
 </form>
 {% endblock content %}
+
+{% block scripts %}
+	<script>
+	$(document).ready(function(){
+		$('#nhs-link').parent().addClass('active');
+	})
+	</script>
+{% endblock scripts %}

@@ -264,6 +264,9 @@ class UserProfile(models.Model):
     def is_volunteer(self):
         return self.user.has_perm('main.add_userevent')
 
+    def is_social_user(self):
+        return self.user.social_auth.exists()
+
     def hours_filtered(self, filter, last_month=False):
         #slow af function
         count = 0

@@ -36,6 +36,8 @@ urlpatterns = patterns('',
          'post_change_redirect': '/profile/change_pass/complete/'},
         name='change_password'),
 
+    url(r'^social/', include('social.apps.django_app.urls', namespace='social')),
+
     url(r'^', include('main.urls', namespace='main')),
 )
 
@@ -44,4 +46,3 @@ if settings.DEBUG:
     urlpatterns += patterns('',
         url(r'^__debug__/', include(debug_toolbar.urls)),
     )
-

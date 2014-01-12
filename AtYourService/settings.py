@@ -101,6 +101,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'south',
     'main',
+    'social.apps.django_app.default',
 )
 
 EMAIL_SUBJECT_PREFIX = '[AtYourService] '
@@ -119,6 +120,29 @@ SITE_ID = 1
 # SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 DATETIME_INPUT_FORMATS = global_settings.DATETIME_INPUT_FORMATS + ('%m/%d/%y %I:%M %p', '%m/%d/%Y %I:%M %p')
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'main.pipeline.add_userprof',
+    'main.pipeline.add_volunteer_group',
+    'social.pipeline.user.user_details',
+    'main.pipeline.message_user'
+)
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_URL = '/'
 
 if DEBUG:
     try:

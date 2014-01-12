@@ -6,9 +6,11 @@
 	<h2>User account details for {{request.user.get_full_name}}</h2><br>
 	<b>Username: </b>{{request.user.username}}<br>
 	<b>Graduating Class: </b>{{request.user.user_profile.grad_class}}<br>
+	{% if not request.user.user_profile.is_social_user %}
 	<a href="{% url 'change_password' %}">Change password</a>
+	{%endif%}
 	{%if request.user.user_profile.membership_status == "CAN"%}
-	<!-- stuff about changing candidate to member -->
+	{# stuff about changing candidate to member #}
 	{%endif%}
 	<br>
 	<b>Location: </b>{{request.user.user_profile.location}} <a href="{% url 'main:change_loc'%}">Change</a>

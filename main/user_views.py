@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
@@ -13,7 +13,7 @@ import random
 import string
 import pytz
 
-from main.forms import MyUserCreate
+from main.forms import MyUserCreate, SocialUserProf
 
 def login_view(request):
     if request.user.is_authenticated():
@@ -103,3 +103,14 @@ def email_validation(request, key):
         messages.info(request, 'Your email is already valid!')
     return HttpResponseRedirect(reverse('main:user_profile'))
 
+def social_user_new(request):
+    if request.method == "POST":
+        form = SocialUserProf(request.POST)
+        if form.is_valid():
+            request.session['saved_timezone'] = form.cleaned_data['timezone']
+            request.session['saved_grad_class'] = form.cleaned_data['grad_class']
+            request.session['saved_member_status'] = form.cleaned_data['member_status']
+            backend = request.session['partial_pipeline']['backend']
+            return redirect('social:complete', backend=backend)
+        messages.error(request, 'Choose something valid.')
+    return render(request, 'main/social_user_new.html', {'timezones': pytz.common_timezones})
