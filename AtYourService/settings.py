@@ -136,9 +136,12 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
     'main.pipeline.add_userprof',
-    'social.pipeline.user.user_details'
+    'main.pipeline.add_volunteer_group',
+    'social.pipeline.user.user_details',
+    'main.pipeline.message_user'
 )
 
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_LOGIN_URL = '/'
 
 if DEBUG:

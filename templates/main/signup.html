@@ -42,6 +42,7 @@
 
 		</style>
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
+		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
 	<style type="text/css"></style>
 	</head>
@@ -63,6 +64,7 @@
 			{%endif%}
 
 			<form class="form-signin" action="" method="post">
+				Hey! <a href='{%url "social:begin" "google-oauth2"%}' id="google-login" class="btn btn-sm btn-danger"><i class="fa fa-google-plus"></i> Login with Google</a>
 				{%csrf_token%}
 				<h2 class="form-signin-heading">Please sign up</h2>
 				<div class="form-group">
