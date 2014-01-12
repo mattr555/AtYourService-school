@@ -59,3 +59,8 @@ v0.2.0
 * +Travis CI/Coveralls
 * +Member vs. Candidate rules and tracking
 * +Monthly rules for members
+
+v0.3.0
+------
+
+* +Login with Google
