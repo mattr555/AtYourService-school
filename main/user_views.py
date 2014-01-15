@@ -107,7 +107,7 @@ def social_user_new(request):
     if request.user.is_authenticated():
         messages.error(request, 'You are already logged in!')
         return HttpResponseRedirect('/')
-    if request.session.get('partial_pipeline'):
+    elif request.session.get('partial_pipeline'):
         if request.method == "POST":
             form = SocialUserProf(request.POST)
             if form.is_valid():
