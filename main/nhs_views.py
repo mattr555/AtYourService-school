@@ -90,7 +90,7 @@ def change_org_admin(request, pk):
         group.user_set.remove(user)
     if request.GET.get('next', None):
         return HttpResponseRedirect(request.GET.get('next'))
-    return HttpResponseRedirect(reverse('main:nhs_list'))
+    return HttpResponseRedirect(reverse('main:nhs_home'))
 
 @permission_required('auth.can_view', login_url='/forbidden')
 def demerit(request, pk):
