@@ -81,10 +81,9 @@
 					<label for="class-field">Graduating Class</label>
 					<select name="grad_class" id="class-field" class="form-control input-block-level">
 						<option value="">-</option>
-						<option value="2014">2014</option>
-						<option value="2015">2015</option>
-						<option value="2016">2016</option>
-						<option value="2017">2017</option>
+						{% for y in years %}
+							<option value="{{y}}">{{y}}</option>
+						{% endfor %}
 					</select>
 				</div>
 				<div class="form-group">
