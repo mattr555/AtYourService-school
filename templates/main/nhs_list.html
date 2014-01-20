@@ -1,6 +1,6 @@
 {% extends "main/base.html" %}
 
-{% block title %}List Students{% endblock title %}
+{% block title %}List {{student_type}}{% endblock title %}
 
 {% block content %}
 	<div><h2>List {{student_type}}</h2></div>
@@ -28,7 +28,11 @@
 						<td>{{s.user_profile.demerit_count}}</td>
 					{%endif%}
 					<td>{{s.user_profile.grad_class}}</td>
-					<td>{%if s.user_profile.is_org_admin%}Yes{%else%}No{%endif%} <a href="{%url 'main:change_org_admin' s.id%}">(Change)</a></td>
+					{% if student_type == "Candidates" %}
+						<td>{%if s.user_profile.is_org_admin%}Yes{%else%}No{%endif%} <a href="{%url 'main:change_org_admin' s.id%}?next={%url 'main:nhs_candidate_list'%}">(Change)</a></td>
+					{%else%}
+						<td>{%if s.user_profile.is_org_admin%}Yes{%else%}No{%endif%} <a href="{%url 'main:change_org_admin' s.id%}?next={%url 'main:nhs_member_list'%}">(Change)</a></td>
+					{%endif%}
 				</tr>
 			{% endfor %}
 		</tbody>

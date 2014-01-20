@@ -8,12 +8,19 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
 from django.conf import settings
+from django.utils import timezone
 
 import random
 import string
 import pytz
 
 from main.forms import MyUserCreate, SocialUserProf
+
+def grad_year_list():
+    y = timezone.now().year
+    if timezone.now().month >= 7:
+        return [y+1, y+2, y+3, y+4]
+    return [y, y+1, y+2, y+3]
 
 def login_view(request):
     if request.user.is_authenticated():
@@ -59,12 +66,13 @@ def signup(request):
                 u.user_profile.email_validation_key = ''
                 u.user_profile.save()
             return HttpResponseRedirect('/')
-        return render(request, 'main/signup.html', {'errors': form.errors, 'timezones': pytz.common_timezones, 'form': form})
+        return render(request, 'main/signup.html', {'errors': form.errors, 'timezones': pytz.common_timezones, 'form': form,
+            'years': grad_year_list()})
     elif request.user.is_authenticated():
         messages.error(request, 'You are already logged in')
         return HttpResponseRedirect(request.GET.get('next', '/'))
     form = MyUserCreate()
-    return render(request, 'main/signup.html', {'timezones': pytz.common_timezones, 'form': form})
+    return render(request, 'main/signup.html', {'timezones': pytz.common_timezones, 'form': form, 'years': grad_year_list()})
 
 @login_required
 def change_location(request):
@@ -104,13 +112,19 @@ def email_validation(request, key):
     return HttpResponseRedirect(reverse('main:user_profile'))
 
 def social_user_new(request):
-    if request.method == "POST":
-        form = SocialUserProf(request.POST)
-        if form.is_valid():
-            request.session['saved_timezone'] = form.cleaned_data['timezone']
-            request.session['saved_grad_class'] = form.cleaned_data['grad_class']
-            request.session['saved_member_status'] = form.cleaned_data['member_status']
-            backend = request.session['partial_pipeline']['backend']
-            return redirect('social:complete', backend=backend)
-        messages.error(request, 'Choose something valid.')
-    return render(request, 'main/social_user_new.html', {'timezones': pytz.common_timezones})
+    if request.user.is_authenticated():
+        messages.error(request, 'You are already logged in!')
+        return HttpResponseRedirect('/')
+    elif request.session.get('partial_pipeline'):
+        if request.method == "POST":
+            form = SocialUserProf(request.POST)
+            if form.is_valid():
+                request.session['saved_timezone'] = form.cleaned_data['timezone']
+                request.session['saved_grad_class'] = form.cleaned_data['grad_class']
+                request.session['saved_member_status'] = form.cleaned_data['member_status']
+                backend = request.session['partial_pipeline']['backend']
+                return redirect('social:complete', backend=backend)
+            messages.error(request, 'Choose something valid.')
+        return render(request, 'main/social_user_new.html', {'timezones': pytz.common_timezones, 'years': grad_year_list()})
+    messages.error(request, 'Something went wrong. Were you trying to signup?')
+    return HttpResponseRedirect('/')

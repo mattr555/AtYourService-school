@@ -35,6 +35,8 @@ personal_settings.py
 * `MANAGERS`
 * `SCHOOL_NAME`
 * `SCHOOL_NAME_SHORT`
+* `SOCIAL_AUTH_GOOGLE_OAUTH2_KEY`
+* `SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET`
 
 Changelog
 =========
@@ -43,24 +45,32 @@ v0.1.0
 ------
 Initial release. Corresponds with AtYourService v0.1.0
 
-* +User account manipula tion
-* +Email notification
-* +Organization manipulation and administration
-* +Confirmation of user attendance
-* +Email verification
+* [+] User account manipula tion
+* [+] Email notification
+* [+] Organization manipulation and administration
+* [+] Confirmation of user attendance
+* [+] Email verification
 
 v0.2.0
 ------
 
-* +NHS Admin page:
+* [+] NHS Admin page:
 	* view reports of students
 	* disapprove of bad events
 	* demerits
-* +Travis CI/Coveralls
-* +Member vs. Candidate rules and tracking
-* +Monthly rules for members
+* [+] Travis CI/Coveralls
+* [+] Member vs. Candidate rules and tracking
+* [+] Monthly rules for members
 
 v0.3.0
 ------
 
-* +Login with Google
+* [+] Login with Google
+
+v0.4.0
+------
+
+* [+] Organizers can earn hours on their events
+* [fix] Visual stuff
+* [fix] logged in users going to /signup/social
+* [fix] org admin change on nhs list page

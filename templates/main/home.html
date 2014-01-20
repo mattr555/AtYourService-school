@@ -1,13 +1,12 @@
 {%extends 'main/base.html'%}
 
-{%block title%}AtYourService{%endblock%}
+{%block title%}Home{%endblock%}
 
 {%block content%}
 <div class="jumbotron">
 	<h1>Track Service.</h1>
 	<p>Stop thinking about hours and start doing them!</p>
-	<a href="/signup" class="btn btn-primary">Get Started!</a>
-	<a href="/login" class="btn btn-success">Or login</a>
+	<a href="{%url 'social:begin' 'google-oauth2'%}" class="btn btn-danger"><i class="fa fa-google-plus"></i> Login with Google</a>
 </div>
 <h2 style="text-align:center">NHS Candidate or Member at {{SCHOOL_NAME}}?</h2><br>
 Track your hours and find events here!

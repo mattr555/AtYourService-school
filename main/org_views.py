@@ -94,10 +94,14 @@ def event_new(request):
         form = EventCreate(user=request.user, data=request.POST)
         if form.is_valid():
             e = form.save()
+            if request.POST.get('organizer_hours', 'off') == 'on':
+                e.participants.add(request.user)
+                e.confirmed_participants.add(request.user)
             messages.success(request, 'Event created successfully')
             return HttpResponseRedirect(reverse('main:event_home', args=(str(e.id))))
         else:
-            return render(request, 'main/event_new.html', {'errors': form.errors, 'event': form})
+            return render(request, 'main/event_new.html', {'errors': form.errors, 'event': form,
+                'organizer_hrs': request.POST.get('organizer_hours', 'off') == 'on'})
 
 @login_required
 def event_edit(request, pk):
@@ -107,7 +111,8 @@ def event_edit(request, pk):
         return HttpResponseRedirect(reverse('main:manage_home'))
     if request.method == "GET":
         form = EventCreate(data=e.__dict__, user=request.user)
-        return render(request, 'main/event_edit.html', {'event': form})
+        return render(request, 'main/event_edit.html', {'event': form, 
+            'organizer_hrs': request.user in e.participants.all()})
     else:
         data_dict = request.POST.dict()
         data_dict['organization'] = e.organization_id
@@ -116,11 +121,18 @@ def event_edit(request, pk):
             for k, v in form.cleaned_data.items():
                 if k != 'organization':
                     e.__dict__[k] = v
+            if data_dict.get('organizer_hours', 'off') == 'on':
+                e.participants.add(request.user)
+                e.confirmed_participants.add(request.user)
+            else:
+                e.participants.remove(request.user)
+                e.confirmed_participants.remove(request.user)
             e.save()
             messages.success(request, 'Event edited successfully')
             return HttpResponseRedirect(reverse('main:event_home', args=(str(e.id))))
         else:
-            return render(request, 'main/event_edit.html', {'event': form, 'errors': form.errors})
+            return render(request, 'main/event_edit.html', {'event': form, 'errors': form.errors,
+                'organizer_hrs': request.POST.get('organizer_hours', 'off') == 'on'})
 
 @login_required
 def event_delete(request, pk):

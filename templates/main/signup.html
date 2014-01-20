@@ -110,19 +110,23 @@
 					<label for="class-field">Graduating Class</label>
 					<select name="grad_class" id="class-field" class="form-control input-block-level">
 						<option value="">-</option>
-						<option value="2014">2014</option>
-						<option value="2015">2015</option>
-						<option value="2016">2016</option>
-						<option value="2017">2017</option>
+						{% for y in years %}
+							<option value="{{y}}">{{y}}</option>
+						{% endfor %}
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="status-field">I am a...</label>
-					<select name="member_status" id="status-field" class="form-control input-block-level">
-						<option value="">-</option>
-						<option value="CAN">NHS Candidate</option>
-						<option value="MEM">NHS Member</option>
-					</select>
+					<label>I am a...</label>
+					<div class="radio" style="margin-top:0px">
+						<label>
+							<input type="radio" name="member_status" value="CAN"> NHS Candidate
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input type="radio" name="member_status" value="MEM"> NHS Member
+						</label>
+					</div>
 				</div>
 				<label>
 					reCAPTCHA

@@ -41,6 +41,11 @@
 				<option value="LED" {% if event.hour_type.value == "LED"%}selected{%endif%}>Leadership</option>
 			</select>
 		</div>
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" name="organizer_hours" {%if organizer_hrs%}checked{%endif%}> You (the organizer) will also earn hours
+			</label>
+		</div>
 		<div class="form-group">
 			<label for="location-field">Location</label>
 			<input type="text" class="form-control" id="location-field" name="location" value="{{event.location.value}}" required>

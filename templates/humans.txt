@@ -32,9 +32,10 @@
 
 /* SITE */
 	
-	Last Update: ...ongoing
+	Last Update: 2014-01-19
 	Language: English
 	Standards: HTML5, CSS3
 	Doctype: HTML5
 	Software: Sublime Text 3
 	GitHub: github.com/mattr555/AtYourService-school
+	License: MIT
