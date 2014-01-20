@@ -32,3 +32,5 @@ Done:
 		Monthly rules
 	0.3.0:
 		Login with Google
+	0.4.0:
+		Organizers can get their own hours
