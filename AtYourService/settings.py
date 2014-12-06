@@ -99,7 +99,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'south',
+    # 'south',
     'main',
     'social.apps.django_app.default',
 )
@@ -143,6 +143,8 @@ SOCIAL_AUTH_PIPELINE = (
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_LOGIN_URL = '/'
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 if DEBUG:
     try:

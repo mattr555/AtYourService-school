@@ -1,8 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission, Group
 from django.contrib.sites.models import Site
-from south.signals import post_migrate
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_migrate
 from django.core.exceptions import ObjectDoesNotExist
 
 from main.models import SiteSettings, UserProfile, User
@@ -40,6 +39,6 @@ def create_userprof(sender, instance, created, **kwargs):
             UserProfile(user=instance, email_valid=True, grad_class=2000, membership_status='MEM').save()
 
 #post_migrate.connect(add_user_permissions, sender=auth_models)
-post_migrate.connect(add_groups)
+# post_migrate.connect(add_groups)
 post_save.connect(create_userprof, sender=User, dispatch_uid="create_userprof")
 

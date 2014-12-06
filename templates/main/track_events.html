@@ -3,6 +3,11 @@
 
 {%block title%}Track Events{%endblock%}
 
+{%block style%}
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.ui/1.11.2/jquery-ui.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.ui.timepicker.addon/1.4.5/jquery-ui-timepicker-addon.min.css">
+{%endblock%}
+
 {%block content%}
 <h2>Events participated in by {{request.user.get_full_name}}</h2>
 
@@ -114,15 +119,22 @@ No events found!
 {%endblock%}
 
 {%block scripts%}
+
+<script src="//cdn.jsdelivr.net/jquery.ui/1.11.2/jquery-ui.min.js"></script>
+<script src="//cdn.jsdelivr.net/jquery.ui.timepicker.addon/1.4.5/jquery-ui-timepicker-addon.min.js"></script>
+<script src='//cdn.jsdelivr.net/sorttable/2/sorttable.min.js'></script>
 <script>
 $(document).ready(function(){
 	$('#track-link').parent().addClass('active');
 
-	$('#date_start-field').attr('placeholder', 'MM/DD/YY HH:MM AM/PM')
-	$('#date_end-field').attr('placeholder', 'MM/DD/YY HH:MM AM/PM')
+	$('#date_start-field').datetimepicker({
+		timeFormat: "hh:mm tt"
+	});
+	$('#date_end-field').datetimepicker({
+		timeFormat: "hh:mm tt"
+	});
 
 	$('[rel="tooltip"]').tooltip()
 });
 </script>
-<script src='//cdn.jsdelivr.net/sorttable/2/sorttable.min.js'></script>
 {%endblock%}

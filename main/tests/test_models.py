@@ -7,6 +7,12 @@ import random
 import pytz
 from collections import namedtuple
 
+from geopy import geocoders
+geo = geocoders.GoogleV3()
+
+_, (NY_LAT, NY_LON) = geo.geocode('New York City, NY')
+NY_LAT, NY_LON = round(NY_LAT, 4), round(NY_LON, 4)
+
 def create_test_user(name=None):
     if not name: # pragma: no cover
         name = ''.join([random.choice(string.ascii_letters) for i in range(10)])
@@ -101,8 +107,8 @@ class EventTest(TestCase):
 
     def test_event_populate_geo(self):
         self.e.populate_geo()
-        self.assertEqual(round(self.e.geo_lat,4), 40.7144)
-        self.assertEqual(round(self.e.geo_lon,4), -74.006)
+        self.assertEqual(round(self.e.geo_lat,4), NY_LAT)
+        self.assertEqual(round(self.e.geo_lon,4), NY_LON)
 
     def test_haversin(self):
         self.assertEqual(int(haversin(40.7144, -74.006, 34.406, -118.612)), 2455)
@@ -154,8 +160,8 @@ class UserEventTest(TestCase):
 
     def test_userevent_populate_geo(self):
         self.e.populate_geo()
-        self.assertEqual(round(self.e.geo_lat,4), 40.7144)
-        self.assertEqual(round(self.e.geo_lon,4), -74.006)
+        self.assertEqual(round(self.e.geo_lat,4), NY_LAT)
+        self.assertEqual(round(self.e.geo_lon,4), NY_LON)
 
 class OrganizationTest(TestCase):
     def setUp(self):
@@ -181,8 +187,8 @@ class OrganizationTest(TestCase):
 
     def test_org_populate_geo(self):
         self.o.populate_geo()
-        self.assertEqual(round(self.o.geo_lat,4), 40.7144)
-        self.assertEqual(round(self.o.geo_lon,4), -74.006)
+        self.assertEqual(round(self.o.geo_lat,4), NY_LAT)
+        self.assertEqual(round(self.o.geo_lon,4), NY_LON)
 
 class UserProfileTest(TestCase):
     def setUp(self):
@@ -230,8 +236,8 @@ class UserProfileTest(TestCase):
 
     def test_userprof_populate_geo(self):
         self.up.populate_geo()
-        self.assertEqual(round(self.up.geo_lat,4), 40.7144)
-        self.assertEqual(round(self.up.geo_lon,4), -74.006)
+        self.assertEqual(round(self.up.geo_lat,4), NY_LAT)
+        self.assertEqual(round(self.up.geo_lon,4), NY_LON)
 
     def test_userprof_demerit_count(self):
         self.assertEqual(self.up.demerit_count(), 0)
