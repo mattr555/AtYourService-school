@@ -1,5 +1,4 @@
 Django
-South
 pytz
 geopy
 python3-memcached
