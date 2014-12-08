@@ -112,7 +112,7 @@ def event_edit(request, pk):
     if request.method == "GET":
         form = EventCreate(data=e.__dict__, user=request.user)
         return render(request, 'main/event_edit.html', {'event': form, 
-            'organizer_hrs': request.user in e.participants.all()})
+            'organizer_hrs': request.user in e.participants.all(), 'userevent': False})
     else:
         data_dict = request.POST.dict()
         data_dict['organization'] = e.organization_id
@@ -132,7 +132,7 @@ def event_edit(request, pk):
             return HttpResponseRedirect(reverse('main:event_home', args=(str(e.id))))
         else:
             return render(request, 'main/event_edit.html', {'event': form, 'errors': form.errors,
-                'organizer_hrs': request.POST.get('organizer_hours', 'off') == 'on'})
+                'organizer_hrs': request.POST.get('organizer_hours', 'off') == 'on', 'userevent': False})
 
 @login_required
 def event_delete(request, pk):

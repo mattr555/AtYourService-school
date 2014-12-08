@@ -26,6 +26,12 @@
 			<label for="name-field">Name</label>
 			<input type="text" class="form-control" id="name-field" name="name" value="{{event.name.value}}" required>
 		</div>
+		{% if userevent %}
+		<div class="form-group">
+			<label for="org-field">Organization</label>
+			<input type="text" class="form-control" id="org-field" name="organization" value="{{event.organization.value}}" required>
+		</div>
+		{%endif%}
 		<div class="form-group">
 			<label for="description-field">Description</label>
 			<textarea class="form-control" id="description-field" rows="3" name="description" required>{{event.description.value}}</textarea>
@@ -46,11 +52,18 @@
 				<option value="LED" {% if event.hour_type.value == "LED"%}selected{%endif%}>Leadership</option>
 			</select>
 		</div>
+		{% if userevent %}
+		<div class="form-group">
+			<label for="hours-worked-field">Hours worked</label>
+			<input type="text" class="form-control" id="hours-worked-field" name="hours_worked" value="{{event.hours_worked.value}}" required>
+		</div>
+		{% else %}
 		<div class="checkbox">
 			<label>
 				<input type="checkbox" name="organizer_hours" {%if organizer_hrs%}checked{%endif%}> You (the organizer) will also earn hours
 			</label>
 		</div>
+		{%endif%}
 		<div class="form-group">
 			<label for="location-field">Location</label>
 			<input type="text" class="form-control" id="location-field" name="location" value="{{event.location.value}}" required>

@@ -97,6 +97,23 @@ def userevent_detail(request, pk):
     return HttpResponseRedirect('/')
 
 @login_required
+def userevent_edit(request, pk):
+    e = get_object_or_404(UserEvent.objects, pk=pk)
+    if request.user.id == e.user_id:
+        if request.method == "GET":
+            form = UserEventCreate(data=e.__dict__, user=request.user)
+            return render(request, 'main/event_edit.html', {'event': form, 'userevent': True})
+        form = UserEventCreate(data=request.POST, user=request.user)
+        if form.is_valid():
+            e.__dict__.update(form.cleaned_data)
+            e.save()
+            messages.success(request, 'Event updated successfully')
+            return HttpResponseRedirect(reverse('main:userevent_detail', args=(str(e.id),)))
+        return render(request, 'main/event_edit.html', {'event': form, 'errors': form.errors, 'userevent': True})
+    messages.error(request, "You aren't authorized to do that!")
+    return HttpResponseRedirect(reverse('main:track'))
+
+@login_required
 def delete_userevent(request, pk):
     event = UserEvent.objects.get(pk=pk)
     if event:
