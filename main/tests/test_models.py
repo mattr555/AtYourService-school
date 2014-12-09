@@ -130,6 +130,9 @@ class UserEventTest(TestCase):
         self.assertEqual(str(self.e), 'do stuff')
 
     def test_userevent_hours(self):
+        self.e.advisor_approved = False
+        self.assertEqual(self.e.hours(), 0)
+        self.e.advisor_approved = True
         self.assertEqual(self.e.hours(), 1)
         self.e.nhs_approved = False
         self.assertEqual(self.e.hours(), 0)
@@ -139,12 +142,15 @@ class UserEventTest(TestCase):
         self.assertIn(str(self.e.pk), self.e.detail_url())
 
     def test_userevent_status(self):
-        self.assertEqual(self.e.status(self.user), 'User-created Event')
-        self.assertEqual(self.e.row_class(self.user), 'success')
+        self.assertEqual(self.e.status(self.user), 'Not verified by advisor')
+        self.assertEqual(self.e.row_class(self.user), 'warning')
         self.e.nhs_approved = False
         self.assertEqual(self.e.status(self.user), 'Not approved by NHS')
         self.assertEqual(self.e.row_class(self.user), 'danger')
         self.e.nhs_approved = True
+        self.e.advisor_approved = True
+        self.assertEqual(self.e.status(self.user), 'Verified')
+        self.assertEqual(self.e.row_class(self.user), 'success')
         new_user = create_test_user('test3')
         self.assertEqual(self.e.status(new_user), 'Not participating')
         self.assertEqual(self.e.row_class(new_user), '')
@@ -221,7 +227,7 @@ class UserProfileTest(TestCase):
         self.assertEqual(self.up.leadership_hours(), 0)
         UserEvent(name='do stuff', user=self.u, organization='do stuff org', description='yeah', date_start=timezone.now(), 
             date_end=timezone.now() + timezone.timedelta(hours=1), location='New York City, NY', hour_type='LED', 
-            hours_worked=1).save()
+            hours_worked=1, advisor_approved=True).save()
         self.assertEqual(self.up.leadership_hours(), 1)
 
     def test_userprof_service_hours_last_month(self):

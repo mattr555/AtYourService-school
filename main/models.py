@@ -182,7 +182,7 @@ class UserEvent(models.Model):
         return self.name
 
     def hours(self):
-        if not self.nhs_approved:
+        if not (self.nhs_approved and self.advisor_approved):
             return 0
         return self.hours_approved()
 
