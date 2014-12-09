@@ -1,0 +1,9 @@
+Hello,
+
+{{name}} has requested that you verify their attendance at an event they titled {{event.name}}. If you, as the advisor of the organization that runs this event, can verify that {{name}} has attended {{event.name}} and has volunteered {{event.hours_worked}} hours of their time, please provide a digital signature by following the link below:
+
+http://{{site.domain}}{% url 'main:userevent_verify' event.id %}?key={{event.email_verification_key}}
+
+Thanks,
+
+{{SCHOOL_NAME}} National Honor Society

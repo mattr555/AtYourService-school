@@ -34,6 +34,11 @@
 					</div>
 					
 					<div class="form-group">
+						<label for="adv-email-field">Advisor Email</label>
+						<input type="text" class="form-control" id="adv-email-field" name="advisor_email" {%if form.advisor_email.value%}value="{{form.advisor_email.value}}"{%endif%} required>
+					</div>
+
+					<div class="form-group">
 						<label for="description-field">Description</label>
 						<textarea name="description" id="description-field" class="form-control" rows="3">{%if form.description.value%}{{form.description.value}}{%endif%}</textarea>
 					</div>

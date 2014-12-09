@@ -1,4 +1,5 @@
 What should happen before a 0.9 (closed beta) release:
+	Verification of userevents
 	Django admin page
 	No JOINS
 	Caching

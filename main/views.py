@@ -11,7 +11,7 @@ from itertools import chain
 from operator import attrgetter
 from datetime import datetime
 
-from main.forms import UserEventCreate
+from main.forms import UserEventCreate, UserEventVerify
 from main.models import Event, UserEvent, Organization
 
 def home(request):
@@ -103,15 +103,30 @@ def userevent_edit(request, pk):
         if request.method == "GET":
             form = UserEventCreate(data=e.__dict__, user=request.user)
             return render(request, 'main/event_edit.html', {'event': form, 'userevent': True})
-        form = UserEventCreate(data=request.POST, user=request.user)
+        form = UserEventCreate(data=request.POST, user=request.user, instance=e)
         if form.is_valid():
-            e.__dict__.update(form.cleaned_data)
-            e.save()
+            form.save()
             messages.success(request, 'Event updated successfully')
             return HttpResponseRedirect(reverse('main:userevent_detail', args=(str(e.id),)))
         return render(request, 'main/event_edit.html', {'event': form, 'errors': form.errors, 'userevent': True})
     messages.error(request, "You aren't authorized to do that!")
     return HttpResponseRedirect(reverse('main:track'))
+
+def userevent_verify(request, pk):
+    e = get_object_or_404(UserEvent.objects, pk=pk)
+    if request.method == "GET" and request.GET.get('key', 'abc') == e.email_verification_key:
+        form = UserEventVerify(data=e.__dict__)
+        return render(request, 'main/userevent_verify.html', {'event': form, 'key': request.GET.get('key'), 'name': e.user.get_full_name()})
+    elif request.method == "POST" and request.POST.get('key', 'abc') == e.email_verification_key:
+        form = UserEventVerify(data=request.POST, instance=e)
+        if form.is_valid():
+            form.save(commit=False)
+            e.advisor_approved = True
+            e.save()
+            messages.success(request, "Thank you for verifying {}'s NHS hours!".format(e.user.get_full_name()))
+            return HttpResponseRedirect('/')
+        return render(request, 'main/userevent_verify.html', {'event': form, 'key': request.GET.get('key'), 'errors': form.errors, 'name': e.user.get_full_name()})
+    return HttpResponseRedirect('/forbidden')
 
 @login_required
 def delete_userevent(request, pk):

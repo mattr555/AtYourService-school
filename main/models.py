@@ -198,12 +198,15 @@ class UserEvent(models.Model):
         if user == self.user:
             if timezone.now() < self.date_start:
                 return "Event has not occurred yet"
-            return "User-created Event"
+            elif not self.advisor_approved:
+                return "Not verified by advisor"
+            return "Verified"
         return "Not participating"
 
     def row_class(self, user):
         ROW_CLASSES = {"Not approved by NHS": "danger",
-                       "User-created Event": "success"}
+                       "Not verified by advisor": "warning",
+                       "Verified": "success"}
         status = ROW_CLASSES.get(self.status(user), "")
         if self.from_last_month():
             return status + ' last-month'
@@ -241,6 +244,10 @@ class UserEvent(models.Model):
     hours_worked = models.FloatField('hours worked')
     hour_type = models.CharField(max_length=3, choices=HOUR_TYPES)
     nhs_approved = models.BooleanField(default=True)
+    advisor_approved = models.BooleanField(default=False)
+    advisor_email = models.CharField(max_length=254)
+    advisor_name = models.CharField(max_length=100, blank=True)
+    email_verification_key = models.CharField(max_length=50, blank=True)
 
 class UserProfile(models.Model):
     def __str__(self):

@@ -7,20 +7,12 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
-from django.conf import settings
-from django.utils import timezone
 
 import random
 import string
 import pytz
 
-from main.forms import MyUserCreate, SocialUserProf
-
-def grad_year_list():
-    y = timezone.now().year
-    if timezone.now().month >= 7:
-        return [y+1, y+2, y+3, y+4]
-    return [y, y+1, y+2, y+3]
+from main.forms import MyUserCreate, SocialUserProf, grad_year_list
 
 def login_view(request):
     if request.user.is_authenticated():
