@@ -1,107 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Login</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="">
-		<meta name="author" href="/humans.txt">
+{%extends 'main/base_login.html'%}
+{%block title%}Login{%endblock%}
 
-		<!-- Le styles -->
-		<style type="text/css">
-			body {
-				padding-top: 40px;
-				padding-bottom: 40px;
-				background-color: #f5f5f5;
-			}
+{%block content%}
+<form class="form-signin" action="" method="post">
+	{%csrf_token%}
+	Hey! <a href='{%url "social:begin" "google-oauth2"%}' id="google-login" class="btn btn-sm btn-danger"><i class="fa fa-google-plus"></i> Login with Google</a>
+	<h2 class="form-signin-heading">Please login</h2>
+	<input type="text" class="input-block-level form-control" placeholder="Username" style="background-image: none; background-position: 0% 0%; background-repeat: repeat repeat;" name="uname" id="uname">
+	<input type="password" class="input-block-level form-control" placeholder="Password" name="pword" id="pword">
+	<button class="btn btn-large btn-primary" type="submit">Login</button><br>
+	<a href="{%url 'reset_password'%}">Forgot password?</a><br>
+	<a href="{%url 'main:signup'%}">Signup</a>
+</form>
+{%endblock%}
 
-			.form-signin {
-				max-width: 300px;
-				padding: 19px 29px 29px;
-				margin: 0 auto 20px;
-				background-color: #fff;
-				border: 1px solid #e5e5e5;
-				-webkit-border-radius: 5px;
-					 -moz-border-radius: 5px;
-								border-radius: 5px;
-				-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-					 -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-								box-shadow: 0 1px 2px rgba(0,0,0,.05);
-			}
-			.form-signin .form-signin-heading,
-			.form-signin .checkbox {
-				margin-bottom: 10px;
-			}
-			.form-signin input[type="text"],
-			.form-signin input[type="password"] {
-				font-size: 16px;
-				height: auto;
-				margin-bottom: 15px;
-				padding: 7px 9px;
-			}
+{%block script%}
+<script>
+	var QueryString = function () {
+	  // This function is anonymous, is executed immediately and 
+	  // the return value is assigned to QueryString!
+	  var query_string = {};
+	  var query = window.location.search.substring(1);
+	  var vars = query.split("&");
+	  for (var i=0;i<vars.length;i++) {
+	    var pair = vars[i].split("=");
+	    	// If first entry with this name
+	    if (typeof query_string[pair[0]] === "undefined") {
+	      query_string[pair[0]] = pair[1];
+	    	// If second entry with this name
+	    } else if (typeof query_string[pair[0]] === "string") {
+	      var arr = [ query_string[pair[0]], pair[1] ];
+	      query_string[pair[0]] = arr;
+	    	// If third or later entry with this name
+	    } else {
+	      query_string[pair[0]].push(pair[1]);
+	    }
+	  } 
+	    return query_string;
+	} ();
 
-		</style>
-		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
-		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-
-	<style type="text/css"></style>
-	</head>
-
-	<body style="">
-
-		<div class="container">
-
-			{% if error_message %}
-			<div class="alert alert-danger">
-				<a class="close" data-dismiss="alert" href="#">&times;</a>
-				<h4 class="alert-heading">Oh Noes!</h4>
-				<p>{{error_message}}</p>
-			</div>
-			{%endif%}
-			
-			<form class="form-signin" action="" method="post">
-				{%csrf_token%}
-				Hey! <a href='{%url "social:begin" "google-oauth2"%}' id="google-login" class="btn btn-sm btn-danger"><i class="fa fa-google-plus"></i> Login with Google</a>
-				<h2 class="form-signin-heading">Please login</h2>
-				<input type="text" class="input-block-level form-control" placeholder="Username" style="background-image: none; background-position: 0% 0%; background-repeat: repeat repeat;" name="uname" id="uname">
-				<input type="password" class="input-block-level form-control" placeholder="Password" name="pword" id="pword">
-				<button class="btn btn-large btn-primary" type="submit">Login</button><br>
-				<a href="{%url 'reset_password'%}">Forgot password?</a><br>
-				<a href="{%url 'main:signup'%}">Signup</a>
-			</form>
-
-		</div> <!-- /container -->
-
-		<!-- Le javascript
-		================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-		<script>
-			var QueryString = function () {
-			  // This function is anonymous, is executed immediately and 
-			  // the return value is assigned to QueryString!
-			  var query_string = {};
-			  var query = window.location.search.substring(1);
-			  var vars = query.split("&");
-			  for (var i=0;i<vars.length;i++) {
-			    var pair = vars[i].split("=");
-			    	// If first entry with this name
-			    if (typeof query_string[pair[0]] === "undefined") {
-			      query_string[pair[0]] = pair[1];
-			    	// If second entry with this name
-			    } else if (typeof query_string[pair[0]] === "string") {
-			      var arr = [ query_string[pair[0]], pair[1] ];
-			      query_string[pair[0]] = arr;
-			    	// If third or later entry with this name
-			    } else {
-			      query_string[pair[0]].push(pair[1]);
-			    }
-			  } 
-			    return query_string;
-			} ();
-
-			$('#google-login').attr('href', $('#google-login').attr('href') + '?next=' + QueryString.next);
-		</script>
-
-</body></html>
+	$('#google-login').attr('href', $('#google-login').attr('href') + '?next=' + QueryString.next);
+</script>
+{%endblock%}

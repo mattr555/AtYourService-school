@@ -58,7 +58,7 @@ def signup(request):
                 u.user_profile.email_validation_key = ''
                 u.user_profile.save()
             return HttpResponseRedirect('/')
-        return render(request, 'main/signup.html', {'errors': form.errors, 'timezones': pytz.common_timezones, 'form': form,
+        return render(request, 'main/signup.html', {'error_message': form.errors, 'timezones': pytz.common_timezones, 'form': form,
             'years': grad_year_list()})
     elif request.user.is_authenticated():
         messages.error(request, 'You are already logged in')

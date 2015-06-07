@@ -69,12 +69,13 @@ class UserEventCreate(forms.ModelForm):
             key = "".join([random.choice(string.ascii_letters) for i in range(20)])
             event.email_verification_key = key
             site = Site.objects.get_current()
+        if commit:
+            event.save()
+        if self._old_advisor_email != event.advisor_email:
             send_mail('{} has requested you to verify their service'.format(event.user.get_full_name()),
                       render_to_string('email/service_verify.txt', {'event': event, 'site': site, 'name': event.user.get_full_name()}),
                       'noreply@atyourservice.com',
                       [event.advisor_email])
-        if commit:
-            event.save()
         return event
 
     def clean_date_end(self):

@@ -125,7 +125,7 @@ def userevent_verify(request, pk):
             e.save()
             messages.success(request, "Thank you for verifying {}'s NHS hours!".format(e.user.get_full_name()))
             return HttpResponseRedirect('/')
-        return render(request, 'main/userevent_verify.html', {'event': form, 'key': request.GET.get('key'), 'errors': form.errors, 'name': e.user.get_full_name()})
+        return render(request, 'main/userevent_verify.html', {'event': form, 'key': request.GET.get('key'), 'error_message': form.errors, 'name': e.user.get_full_name()})
     return HttpResponseRedirect('/forbidden')
 
 @login_required
