@@ -24,6 +24,6 @@ def add_volunteer_group(strategy, details, user=None, is_new=False, *args, **kwa
 
 def message_user(strategy, details, user=None, is_new=False, *args, **kwargs):
     if is_new:
-        messages.success(kwargs['request'], 'User was created sucessfully. You have been logged in.')
+        messages.success(strategy.request, 'User was created sucessfully. You have been logged in.')
     else:
-        messages.success(kwargs['request'], 'You have been logged in')
+        messages.success(strategy.request, 'You have been logged in')
