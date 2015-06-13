@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 from datetime import timedelta
@@ -73,7 +74,8 @@ class UserEventCreate(forms.ModelForm):
             event.save()
         if self._old_advisor_email != event.advisor_email:
             send_mail('{} has requested you to verify their service'.format(event.user.get_full_name()),
-                      render_to_string('email/service_verify.txt', {'event': event, 'site': site, 'name': event.user.get_full_name()}),
+                      render_to_string('email/service_verify.txt', {'event': event, 'site': site, 
+                            'name': event.user.get_full_name(), 'SCHOOL_NAME': settings.SCHOOL_NAME}),
                       'noreply@atyourservice.com',
                       [event.advisor_email])
         return event

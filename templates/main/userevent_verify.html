@@ -5,9 +5,9 @@
 <form class="form-signin" action="" method="post">
 	{%csrf_token%}
 	<h2 class="form-signin-heading">Please Verify {{name}}'s Service</h2>
-	Hours claimed: {{event.hours_worked.value}}<br>
-	<input type="text" class="input-block-level form-control" placeholder="Name" style="background-image: none; background-position: 0% 0%; background-repeat: repeat repeat;" name="advisor_name" value="{{event.advisor_name.value}}">
-	<input type="text" class="input-block-level form-control" placeholder="Email" name="advisor_email" value="{{event.advisor_email.value}}">
+	Hours claimed: {{event.hours_worked}}<br>
+	<input type="text" class="input-block-level form-control" placeholder="Name" name="advisor_name" value="{{event.advisor_name}}">
+	<input type="text" class="input-block-level form-control" placeholder="Email" name="advisor_email" value="{{event.advisor_email}}">
 	<input type="hidden" name="key" value="{{key}}">
 	<button class="btn btn-large btn-primary" type="submit">Verify</button><br>
 </form>

@@ -115,8 +115,7 @@ def userevent_edit(request, pk):
 def userevent_verify(request, pk):
     e = get_object_or_404(UserEvent.objects, pk=pk)
     if request.method == "GET" and request.GET.get('key', 'abc') == e.email_verification_key:
-        form = UserEventVerify(data=e.__dict__)
-        return render(request, 'main/userevent_verify.html', {'event': form, 'key': request.GET.get('key'), 'name': e.user.get_full_name()})
+        return render(request, 'main/userevent_verify.html', {'event': e, 'key': request.GET.get('key'), 'name': e.user.get_full_name()})
     elif request.method == "POST" and request.POST.get('key', 'abc') == e.email_verification_key:
         form = UserEventVerify(data=request.POST, instance=e)
         if form.is_valid():
