@@ -6,7 +6,7 @@ from decorator import decorator
 
 def JsonResponse(data):
     content = json.dumps({'success': True, 'data': data})
-    return HttpResponse(content, mimetype='application/json')
+    return HttpResponse(content, content_type='application/json')
 
 def NotFound(msg):
     error = {
